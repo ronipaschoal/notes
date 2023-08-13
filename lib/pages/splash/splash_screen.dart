@@ -7,7 +7,7 @@ class SplashScreen extends StatelessWidget {
   Widget _body() {
     return Container(
       padding: const EdgeInsets.all(80.0),
-      color: NtColors.lightGray,
+      color: NtColors.black,
       child: const Image(
         image: AssetImage('assets/icons/logo.png'),
       ),
