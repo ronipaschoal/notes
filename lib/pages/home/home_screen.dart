@@ -1,32 +1,88 @@
 import 'package:flutter/material.dart';
 import 'package:notes/datasources/repositories/note/note_mock.dart';
 import 'package:notes/helpers/navigate.dart';
+import 'package:notes/helpers/string.dart';
 import 'package:notes/models/note/note_model.dart';
 import 'package:notes/pages/home/home_drawer.dart';
 import 'package:notes/ui/colors.dart';
 import 'package:notes/ui/note_card.dart';
 import 'package:notes/ui/scaffold.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-  Widget _list(List<NoteModel> noteList) {
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final _searchController = TextEditingController();
+  bool _isList = true;
+  List<NoteModel> _noteList = noteListMock;
+
+  Widget _list() {
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: noteList.length,
+      itemCount: _noteList.length,
       separatorBuilder: (_, __) => const SizedBox(height: 8.0),
-      itemBuilder: (_, index) => NtNoteCard(
-        note: noteList[index],
+      itemBuilder: (_, index) => NtNoteCard(note: _noteList[index]),
+    );
+  }
+
+  Widget _grid() {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: _noteList.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 16.0,
+        mainAxisSpacing: 16.0,
+        childAspectRatio: 1.45,
       ),
+      itemBuilder: (_, index) => NtNoteCard(note: _noteList[index]),
+    );
+  }
+
+  TextField _search() {
+    return TextField(
+      controller: _searchController,
+      decoration: const InputDecoration(
+        hintText: 'Pesquisar',
+        prefixIcon: Icon(Icons.search),
+        border: OutlineInputBorder(),
+        contentPadding: EdgeInsets.all(4),
+      ),
+      onChanged: (value) => setState(() {
+        _noteList = noteListMock
+            .where(
+              value.isEmpty
+                  ? (note) => true
+                  : (note) => note.title
+                      .removeDiatrics()
+                      .toLowerCase()
+                      .contains(value.removeDiatrics().toLowerCase()),
+            )
+            .toList();
+      }),
     );
   }
 
   Widget _title() {
     return const Image(
-      height: 80.0,
+      height: 72.0,
       image: AssetImage('assets/icons/logo.png'),
     );
+  }
+
+  List<Widget> _actions() {
+    return [
+      IconButton(
+        onPressed: () => setState(() => _isList = !_isList),
+        icon: Icon(_isList ? Icons.grid_view : Icons.list),
+      ),
+    ];
   }
 
   Widget _floatingButton(BuildContext context) {
@@ -45,8 +101,6 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _body(BuildContext context) {
-    final noteList = noteListMock;
-
     return Container(
       color: NtColors.lightGray,
       child: Padding(
@@ -55,7 +109,9 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            _list(noteList),
+            _search(),
+            const SizedBox(height: 16.0),
+            _isList ? _list() : _grid(),
           ],
         ),
       ),
@@ -66,6 +122,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return NtScaffold(
       title: _title(),
+      actions: _actions(),
       drawer: const HomeDrawer(),
       floatingButton: _floatingButton(context),
       child: _body(context),

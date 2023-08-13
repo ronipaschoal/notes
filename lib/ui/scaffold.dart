@@ -6,12 +6,15 @@ class NtScaffold extends StatelessWidget {
   final Widget? drawer;
   final Widget? floatingButton;
   final Widget child;
+  final List<Widget>? actions;
+
   const NtScaffold({
     super.key,
     this.title,
     this.floatingButton,
     required this.child,
     this.drawer,
+    this.actions,
   });
 
   AppBar _appBar() {
@@ -24,12 +27,14 @@ class NtScaffold extends StatelessWidget {
           width: 4.0,
         ),
       ),
+      actions: actions,
       title: title,
     );
   }
 
   Scaffold _body(BuildContext context) {
     return Scaffold(
+      backgroundColor: NtColors.lightGray,
       appBar: title == null ? null : _appBar(),
       drawer: drawer,
       floatingActionButton: floatingButton,

@@ -9,6 +9,7 @@ class NoteScreen extends StatelessWidget {
 
   Widget _body(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.all(16.0),
       width: double.maxFinite,
       color: NtColors.lightGray,
       child: Column(
