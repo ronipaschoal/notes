@@ -8,7 +8,7 @@ class NoteScreen extends StatelessWidget {
     return Container(
       color: NtColors.lightGray,
       child: const Center(
-        child: Text('Home Screen'),
+        child: Text('Note Screen'),
       ),
     );
   }

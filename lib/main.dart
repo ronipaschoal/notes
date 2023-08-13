@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:notes/pages/home/home_screen.dart';
+import 'package:notes/pages/splash/splash_screen.dart';
 import 'package:notes/ui/colors.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const SplashScreen());
+  Future.delayed(
+    const Duration(seconds: 2),
+    () => runApp(const MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -14,7 +19,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Notes',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Notes'),

@@ -4,7 +4,7 @@ import 'package:notes/ui/colors.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  Widget _body() {
+  Container _body() {
     return Container(
       color: NtColors.lightGray,
       child: const Center(
