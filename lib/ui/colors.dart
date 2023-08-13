@@ -7,7 +7,7 @@ class NtColors {
 
   static const Color lightGray = Color(0xFFEBEBEB);
   static const Color midGray = Color(0xFFBABABA);
-  static const Color darkGray = Color.fromARGB(255, 97, 97, 97);
+  static const Color darkGray = Color(0xFF616161);
 
   static const Color low = Color(0xFF92E98A);
   static const Color medium = Color(0xFFE7D571);

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notes/config/paths.dart';
+import 'package:notes/models/note/note_model.dart';
 import 'package:notes/pages/home/home_screen.dart';
 import 'package:notes/pages/note/note_screen.dart';
-import 'package:notes/ui/scaffold.dart';
 
 class NtRoutes {
   NtRoutes._();
 
-  static CustomTransitionPage _customTransitionPage(String title, Widget page) {
+  static CustomTransitionPage _customTransitionPage(Widget page) {
     return CustomTransitionPage(
       child: page,
       transitionsBuilder: (_, animation, __, child) {
@@ -19,7 +19,7 @@ class NtRoutes {
               end: Offset.zero,
             ),
           ),
-          child: NtScaffold(title: title, child: child),
+          child: child,
         );
       },
     );
@@ -30,16 +30,17 @@ class NtRoutes {
       GoRoute(
         path: NtPaths.home,
         pageBuilder: (_, __) => _customTransitionPage(
-          'Notes',
           const HomeScreen(),
         ),
       ),
       GoRoute(
         path: NtPaths.note,
-        pageBuilder: (_, __) => _customTransitionPage(
-          'Note',
-          const NoteScreen(),
-        ),
+        pageBuilder: (_, state) {
+          final note = state.extra == null ? null : state.extra as NoteModel;
+          return _customTransitionPage(
+            NoteScreen(note: note),
+          );
+        },
       ),
     ],
   );

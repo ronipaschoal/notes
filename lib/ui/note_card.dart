@@ -27,7 +27,7 @@ class NtNoteCard extends StatelessWidget {
       width: double.maxFinite,
       padding: const EdgeInsets.only(right: 16.0),
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: NtColors.white,
         borderRadius: BorderRadius.all(Radius.circular(4.0)),
         border: Border.fromBorderSide(
           BorderSide(color: NtColors.midGray, width: 1.0),
@@ -40,7 +40,7 @@ class NtNoteCard extends StatelessWidget {
   Widget _gestureDetector(BuildContext context, Widget child) {
     return GestureDetector(
       child: _container(child),
-      onTap: () => NtNavigate.to(context, NtPaths.note),
+      onTap: () => NtNavigate.to(context, NtPaths.note, extra: note),
     );
   }
 

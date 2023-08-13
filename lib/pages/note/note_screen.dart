@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:notes/models/note/note_model.dart';
 import 'package:notes/ui/colors.dart';
+import 'package:notes/ui/scaffold.dart';
 
 class NoteScreen extends StatelessWidget {
-  const NoteScreen({super.key});
+  final NoteModel? note;
+  const NoteScreen({super.key, this.note});
 
   Widget _body(BuildContext context) {
     return Container(
+      width: double.maxFinite,
       color: NtColors.lightGray,
-      child: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Center(
-            child: Text('Note Screen'),
-          ),
+          note == null
+              ? const Text('Adicione uma nota')
+              : Text(note?.content ?? ''),
         ],
       ),
     );
@@ -20,6 +24,9 @@ class NoteScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _body(context);
+    return NtScaffold(
+      title: Text(note?.title ?? 'Nova nota'),
+      child: _body(context),
+    );
   }
 }
