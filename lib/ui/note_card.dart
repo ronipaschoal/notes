@@ -7,16 +7,35 @@ class NtNoteCard extends StatelessWidget {
   final NoteModel note;
   const NtNoteCard({super.key, required this.note});
 
+  Widget _priorityColor() {
+    return Container(
+      width: double.maxFinite,
+      height: double.maxFinite,
+      decoration: BoxDecoration(
+        color: note.priority.color,
+        borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+      ),
+    );
+  }
+
   Widget _row(Widget child) {
-    return Row(
+    return Stack(
       children: [
+        _priorityColor(),
         Container(
-          width: 8.0,
           height: double.maxFinite,
-          color: note.priority.color,
+          margin: const EdgeInsets.symmetric(horizontal: 4.0),
+          decoration: const BoxDecoration(
+            color: NtColors.lightGray,
+            borderRadius: BorderRadius.all(Radius.circular(16.0)),
+          ),
+          child: Row(
+            children: [
+              const SizedBox(width: 16.0),
+              Text(note.title),
+            ],
+          ),
         ),
-        const SizedBox(width: 16.0),
-        Text(note.title),
       ],
     );
   }
@@ -25,13 +44,16 @@ class NtNoteCard extends StatelessWidget {
     return Container(
       height: 56.0,
       width: double.maxFinite,
-      padding: const EdgeInsets.only(right: 16.0),
-      decoration: const BoxDecoration(
-        color: NtColors.white,
-        borderRadius: BorderRadius.all(Radius.circular(4.0)),
-        border: Border.fromBorderSide(
-          BorderSide(color: NtColors.midGray, width: 1.0),
-        ),
+      decoration: BoxDecoration(
+        color: NtColors.lightGray,
+        borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+        boxShadow: [
+          BoxShadow(
+            color: NtColors.midGray.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 1,
+          ),
+        ],
       ),
       child: _row(child),
     );

@@ -51,8 +51,15 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: const InputDecoration(
         hintText: 'Pesquisar',
         prefixIcon: Icon(Icons.search),
-        border: OutlineInputBorder(),
-        contentPadding: EdgeInsets.all(4),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: NtColors.midGray, width: 0.5),
+          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: NtColors.darkGray, width: 0.5),
+          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+        ),
+        contentPadding: EdgeInsets.all(16.0),
       ),
       onChanged: (value) => setState(() {
         _noteList = noteListMock
