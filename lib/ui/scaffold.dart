@@ -32,13 +32,23 @@ class NtScaffold extends StatelessWidget {
     );
   }
 
+  GestureDetector _unfocus() {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: child,
+    );
+  }
+
   Scaffold _body(BuildContext context) {
     return Scaffold(
       backgroundColor: NtColors.lightGray,
       appBar: title == null ? null : _appBar(),
       drawer: drawer,
       floatingActionButton: floatingButton,
-      body: SingleChildScrollView(child: child),
+      body: SingleChildScrollView(
+        child: _unfocus(),
+      ),
     );
   }
 
