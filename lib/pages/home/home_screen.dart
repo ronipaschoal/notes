@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:notes/datasources/repositories/note/note_mock.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notes/helpers/navigate.dart';
-import 'package:notes/helpers/string.dart';
 import 'package:notes/models/note/note_model.dart';
+import 'package:notes/pages/home/cubit/home_cubit.dart';
 import 'package:notes/pages/home/home_drawer.dart';
 import 'package:notes/ui/colors.dart';
 import 'package:notes/ui/note_card.dart';
@@ -16,36 +16,36 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late final _cubit = context.read<HomeCubit>();
   final _searchController = TextEditingController();
   bool _isList = true;
-  List<NoteModel> _noteList = noteListMock;
 
-  Widget _list() {
+  Widget _list(List<NoteModel> noteList) {
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: _noteList.length,
+      itemCount: noteList.length,
       separatorBuilder: (_, __) => const SizedBox(height: 8.0),
-      itemBuilder: (_, index) => NtNoteCard(note: _noteList[index]),
+      itemBuilder: (_, index) => NtNoteCard(note: noteList[index]),
     );
   }
 
-  Widget _grid() {
+  Widget _grid(List<NoteModel> noteList) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: _noteList.length,
+      itemCount: noteList.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 16.0,
         mainAxisSpacing: 16.0,
         childAspectRatio: 1.45,
       ),
-      itemBuilder: (_, index) => NtNoteCard(note: _noteList[index]),
+      itemBuilder: (_, index) => NtNoteCard(note: noteList[index]),
     );
   }
 
-  TextField _search() {
+  TextField _search(List<NoteModel> noteList) {
     return TextField(
       controller: _searchController,
       decoration: const InputDecoration(
@@ -61,18 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         contentPadding: EdgeInsets.all(16.0),
       ),
-      onChanged: (value) => setState(() {
-        _noteList = noteListMock
-            .where(
-              value.isEmpty
-                  ? (note) => true
-                  : (note) => note.title
-                      .removeDiatrics()
-                      .toLowerCase()
-                      .contains(value.removeDiatrics().toLowerCase()),
-            )
-            .toList();
-      }),
+      onChanged: (value) => _cubit.searchNote(value),
     );
   }
 
@@ -107,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _body(BuildContext context) {
+  Container _success(List<NoteModel> noteList) {
     return Container(
       color: NtColors.lightGray,
       child: Padding(
@@ -116,12 +105,28 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            _search(),
+            _search(noteList),
             const SizedBox(height: 16.0),
-            _isList ? _list() : _grid(),
+            _isList ? _list(noteList) : _grid(noteList),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _body(BuildContext context) {
+    _cubit.loadNoteList();
+
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (_, state) {
+        return switch (state) {
+          //TODO states implementation
+          HomeInitialState() => const Center(child: Text('TODO')),
+          HomeLoadingState() => const Center(child: Text('TODO')),
+          HomeErrorState() => Center(child: Text(state.error)),
+          HomeSuccessState() => _success(state.noteListFiltered),
+        };
+      },
     );
   }
 

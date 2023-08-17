@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notes/config/paths.dart';
+import 'package:notes/datasources/repositories/note/note_repositorie.dart';
 import 'package:notes/models/note/note_model.dart';
+import 'package:notes/pages/home/cubit/home_cubit.dart';
 import 'package:notes/pages/home/home_screen.dart';
 import 'package:notes/pages/note/note_screen.dart';
+import 'package:notes/services/home/home_service.dart';
 
 class NtRoutes {
   NtRoutes._();
@@ -30,7 +34,12 @@ class NtRoutes {
       GoRoute(
         path: NtPaths.home,
         pageBuilder: (_, __) => _customTransitionPage(
-          const HomeScreen(),
+          BlocProvider(
+            create: (_) => HomeCubit(
+              service: HomeService(repository: NoteRepository()),
+            ),
+            child: const HomeScreen(),
+          ),
         ),
       ),
       GoRoute(
