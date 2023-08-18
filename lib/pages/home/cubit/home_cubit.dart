@@ -2,13 +2,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notes/helpers/debouncer.dart';
 import 'package:notes/helpers/string.dart';
 import 'package:notes/models/note/note_model.dart';
-import 'package:notes/services/home/i_home_service.dart';
+import 'package:notes/services/note/i_note_service.dart';
 
 part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   final _debouncer = NtDebouncer(milliseconds: 500);
-  final IHomeService service;
+  final INoteService service;
 
   HomeCubit({required this.service}) : super(HomeInitialState());
 

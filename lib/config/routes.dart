@@ -7,7 +7,7 @@ import 'package:notes/models/note/note_model.dart';
 import 'package:notes/pages/home/cubit/home_cubit.dart';
 import 'package:notes/pages/home/home_screen.dart';
 import 'package:notes/pages/note/note_screen.dart';
-import 'package:notes/services/home/home_service.dart';
+import 'package:notes/services/note/note_service.dart';
 
 class NtRoutes {
   NtRoutes._();
@@ -36,7 +36,7 @@ class NtRoutes {
         pageBuilder: (_, __) => _customTransitionPage(
           BlocProvider(
             create: (_) => HomeCubit(
-              service: HomeService(repository: NoteRepository()),
+              service: NoteService(repository: NoteRepository()),
             ),
             child: const HomeScreen(),
           ),
