@@ -124,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
           HomeInitialState() => const Center(child: Text('TODO')),
           HomeLoadingState() => const Center(child: Text('TODO')),
           HomeErrorState() => Center(child: Text(state.error)),
-          HomeSuccessState() => _success(state.noteListFiltered),
+          HomeSuccessState() => _success(state.noteList),
         };
       },
     );

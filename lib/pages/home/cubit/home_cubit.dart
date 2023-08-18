@@ -1,35 +1,32 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:notes/cubit/note/note_cubit.dart';
 import 'package:notes/helpers/debouncer.dart';
 import 'package:notes/helpers/string.dart';
 import 'package:notes/models/note/note_model.dart';
-import 'package:notes/services/note/i_note_service.dart';
 
 part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   final _debouncer = NtDebouncer(milliseconds: 500);
-  final INoteService service;
+  final NoteCubit noteCubit;
 
-  HomeCubit({required this.service}) : super(HomeInitialState());
+  HomeCubit({required this.noteCubit}) : super(HomeInitialState());
 
-  void loadNoteList() async {
+  void loadNoteList() {
     emit(HomeLoadingState());
-    final noteList = await service.getNoteList();
+    final noteList = noteCubit.noteList;
     emit(
-      HomeSuccessState(
-        noteList: noteList,
-        noteListFiltered: noteList,
-      ),
+      HomeSuccessState(noteList: noteList),
     );
   }
 
-  void searchNote(String query) async {
-    _debouncer.run(() async {
+  void searchNote(String query) {
+    _debouncer.run(() {
       if (state is HomeSuccessState) {
         final successState = state as HomeSuccessState;
         emit(
           successState.copyWith(
-            noteListFiltered: successState.noteList
+            noteList: noteCubit.noteList
                 .where(
                   (note) =>
                       note.title

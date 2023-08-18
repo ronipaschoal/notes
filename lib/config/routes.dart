@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notes/config/paths.dart';
-import 'package:notes/datasources/repositories/note/note_repositorie.dart';
+import 'package:notes/cubit/note/note_cubit.dart';
 import 'package:notes/models/note/note_model.dart';
 import 'package:notes/pages/home/cubit/home_cubit.dart';
 import 'package:notes/pages/home/home_screen.dart';
 import 'package:notes/pages/note/note_screen.dart';
-import 'package:notes/services/note/note_service.dart';
+import 'package:notes/pages/splash/splash_screen.dart';
 
 class NtRoutes {
   NtRoutes._();
+
+  static final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
   static CustomTransitionPage _customTransitionPage(Widget page) {
     return CustomTransitionPage(
@@ -29,28 +31,41 @@ class NtRoutes {
     );
   }
 
-  static final GoRouter router = GoRouter(
-    routes: <RouteBase>[
-      GoRoute(
-        path: NtPaths.home,
-        pageBuilder: (_, __) => _customTransitionPage(
+  static final List<RouteBase> _routes = [
+    GoRoute(
+      path: NtPaths.splash,
+      pageBuilder: (_, __) {
+        return _customTransitionPage(
+          const SplashScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      path: NtPaths.home,
+      pageBuilder: (_, __) {
+        final noteCubit = _.read<NoteCubit>();
+        return _customTransitionPage(
           BlocProvider(
-            create: (_) => HomeCubit(
-              service: NoteService(repository: NoteRepository()),
-            ),
+            create: (_) => HomeCubit(noteCubit: noteCubit),
             child: const HomeScreen(),
           ),
-        ),
-      ),
-      GoRoute(
-        path: NtPaths.note,
-        pageBuilder: (_, state) {
-          final note = state.extra == null ? null : state.extra as NoteModel;
-          return _customTransitionPage(
-            NoteScreen(note: note),
-          );
-        },
-      ),
-    ],
+        );
+      },
+    ),
+    GoRoute(
+      path: NtPaths.note,
+      pageBuilder: (_, state) {
+        final note = state.extra == null ? null : state.extra as NoteModel;
+        return _customTransitionPage(
+          NoteScreen(note: note),
+        );
+      },
+    ),
+  ];
+
+  static final config = GoRouter(
+    navigatorKey: _rootNavigatorKey,
+    initialLocation: NtPaths.splash,
+    routes: _routes,
   );
 }

@@ -8,21 +8,11 @@ class HomeLoadingState extends HomeState {}
 
 class HomeSuccessState extends HomeState {
   final List<NoteModel> noteList;
-  final List<NoteModel> noteListFiltered;
 
-  HomeSuccessState({
-    required this.noteList,
-    required this.noteListFiltered,
-  });
+  HomeSuccessState({required this.noteList});
 
-  HomeSuccessState copyWith({
-    List<NoteModel>? noteList,
-    List<NoteModel>? noteListFiltered,
-  }) {
-    return HomeSuccessState(
-      noteList: noteList ?? this.noteList,
-      noteListFiltered: noteListFiltered ?? this.noteList,
-    );
+  HomeSuccessState copyWith({List<NoteModel>? noteList}) {
+    return HomeSuccessState(noteList: noteList ?? this.noteList);
   }
 }
 

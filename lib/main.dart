@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notes/config/routes.dart';
-import 'package:notes/pages/splash/splash_screen.dart';
+import 'package:notes/cubit/cubit_providers.dart';
 import 'package:notes/ui/colors.dart';
 
 void main() {
-  runApp(const SplashScreen());
-  Future.delayed(
-    const Duration(seconds: 2),
-    () => runApp(const MyApp()),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -25,7 +22,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       title: _title,
       debugShowCheckedModeBanner: false,
-      routerConfig: NtRoutes.router,
+      routerConfig: NtRoutes.config,
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: NtColors.primary),
@@ -34,5 +31,10 @@ class MyApp extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => _body;
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: CubitProviders.providers,
+      child: _body,
+    );
+  }
 }
