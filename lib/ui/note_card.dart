@@ -13,7 +13,7 @@ class NtNoteCard extends StatelessWidget {
       height: double.maxFinite,
       decoration: BoxDecoration(
         color: note.priority.color,
-        borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
       ),
     );
   }
@@ -24,10 +24,15 @@ class NtNoteCard extends StatelessWidget {
         _priorityColor(),
         Container(
           height: double.maxFinite,
-          margin: const EdgeInsets.symmetric(horizontal: 4.0),
+          margin: const EdgeInsets.only(
+            left: 8.0,
+            top: 0.4,
+            right: 2.0,
+            bottom: 0.4,
+          ),
           decoration: const BoxDecoration(
-            color: NtColors.lightGray,
-            borderRadius: BorderRadius.all(Radius.circular(16.0)),
+            color: NtColors.white,
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
           ),
           child: Row(
             children: [

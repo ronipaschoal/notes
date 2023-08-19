@@ -1,18 +1,37 @@
 part of 'home_cubit.dart';
 
-sealed class HomeState {}
+enum HomeViewType { list, grid }
 
-class HomeInitialState extends HomeState {}
+sealed class HomeState {
+  HomeViewType homeViewType;
 
-class HomeLoadingState extends HomeState {}
+  HomeState({this.homeViewType = HomeViewType.list});
+}
+
+class HomeInitialState extends HomeState {
+  HomeInitialState();
+}
+
+class HomeLoadingState extends HomeState {
+  HomeLoadingState();
+}
 
 class HomeSuccessState extends HomeState {
   final List<NoteModel> noteList;
 
-  HomeSuccessState({required this.noteList});
+  HomeSuccessState({
+    super.homeViewType,
+    required this.noteList,
+  });
 
-  HomeSuccessState copyWith({List<NoteModel>? noteList}) {
-    return HomeSuccessState(noteList: noteList ?? this.noteList);
+  HomeSuccessState copyWith({
+    HomeViewType? homeViewType,
+    List<NoteModel>? noteList,
+  }) {
+    return HomeSuccessState(
+      homeViewType: homeViewType ?? super.homeViewType,
+      noteList: noteList ?? this.noteList,
+    );
   }
 }
 

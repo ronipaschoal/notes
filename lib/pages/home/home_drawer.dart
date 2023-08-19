@@ -5,7 +5,7 @@ import 'package:notes/ui/colors.dart';
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({super.key});
 
-  TextButton _itemButton(BuildContext context, String text, String path) {
+  Widget _itemButton(BuildContext context, String text, String path) {
     return TextButton(
       onPressed: () => NtNavigate.to(context, path),
       style: ButtonStyle(

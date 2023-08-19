@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:notes/models/note/note_model.dart';
-import 'package:notes/ui/colors.dart';
 import 'package:notes/ui/scaffold.dart';
 
 class NoteScreen extends StatelessWidget {
@@ -11,7 +10,6 @@ class NoteScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16.0),
       width: double.maxFinite,
-      color: NtColors.lightGray,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -26,7 +24,10 @@ class NoteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NtScaffold(
-      title: Text(note?.title ?? 'Nova nota'),
+      title: Text(
+        note?.title ?? 'Nova nota',
+        style: const TextStyle(fontSize: 16.0),
+      ),
       child: _body(context),
     );
   }

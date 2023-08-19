@@ -19,12 +19,12 @@ class NtScaffold extends StatelessWidget {
 
   AppBar _appBar() {
     return AppBar(
-      foregroundColor: NtColors.lightGray,
+      foregroundColor: NtColors.white,
       backgroundColor: NtColors.darkGray,
       shape: const Border(
         bottom: BorderSide(
           color: NtColors.primary,
-          width: 4.0,
+          width: 2.0,
         ),
       ),
       actions: actions,
@@ -32,7 +32,7 @@ class NtScaffold extends StatelessWidget {
     );
   }
 
-  GestureDetector _unfocus() {
+  GestureDetector _unfocus(Widget child) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -40,14 +40,14 @@ class NtScaffold extends StatelessWidget {
     );
   }
 
-  Scaffold _body(BuildContext context) {
-    return Scaffold(
-      backgroundColor: NtColors.lightGray,
-      appBar: title == null ? null : _appBar(),
-      drawer: drawer,
-      floatingActionButton: floatingButton,
-      body: SingleChildScrollView(
-        child: _unfocus(),
+  Widget _body(BuildContext context) {
+    return _unfocus(
+      Scaffold(
+        backgroundColor: NtColors.white,
+        appBar: title == null ? null : _appBar(),
+        drawer: drawer,
+        floatingActionButton: floatingButton,
+        body: child,
       ),
     );
   }

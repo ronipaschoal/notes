@@ -12,6 +12,19 @@ class HomeCubit extends Cubit<HomeState> {
 
   HomeCubit({required this.noteCubit}) : super(HomeInitialState());
 
+  void changeViewType() {
+    if (state is HomeSuccessState) {
+      final successState = state as HomeSuccessState;
+      emit(
+        successState.copyWith(
+          homeViewType: successState.homeViewType == HomeViewType.list
+              ? HomeViewType.grid
+              : HomeViewType.list,
+        ),
+      );
+    }
+  }
+
   void loadNoteList() {
     emit(HomeLoadingState());
     final noteList = noteCubit.noteList;

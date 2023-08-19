@@ -47,7 +47,7 @@ class NtRoutes {
         return _customTransitionPage(
           BlocProvider(
             create: (_) => HomeCubit(noteCubit: noteCubit),
-            child: const HomeScreen(),
+            child: HomeScreen(),
           ),
         );
       },
