@@ -2,25 +2,34 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notes/models/note/note_model.dart';
 import 'package:notes/services/note/i_note_service.dart';
 
-part 'note_state.dart';
+part 'note_list_state.dart';
 
-class NoteCubit extends Cubit<NoteState> {
+class NoteListCubit extends Cubit<NoteListState> {
   final INoteService service;
 
-  NoteCubit({required this.service}) : super(NoteState());
+  NoteListCubit({required this.service}) : super(NoteListState());
 
   List<NoteModel> get noteList => state.noteList;
 
-  void add(NoteModel note) {
+  void _add(NoteModel note) {
     emit(state.copyWith(noteList: [...state.noteList, note]));
   }
 
-  void update(NoteModel note) {
-    final index = state.noteList.indexWhere((element) => element.id == note.id);
+  void _update(NoteModel note, int index) {
     final noteList = state.noteList;
     noteList[index] = note;
 
     emit(state.copyWith(noteList: noteList));
+  }
+
+  void save(NoteModel note) {
+    final index = state.noteList.indexWhere((element) => element.id == note.id);
+
+    if (index > -1 && index < state.noteList.length) {
+      _update(note, index);
+    } else {
+      _add(note);
+    }
   }
 
   NoteModel get(String id) {

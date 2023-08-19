@@ -67,7 +67,7 @@ class NtNoteCard extends StatelessWidget {
   Widget _gestureDetector(BuildContext context, Widget child) {
     return GestureDetector(
       child: _container(child),
-      onTap: () => NtNavigate.to(context, NtPaths.note, extra: note),
+      onTap: () => NtNavigate.to(context, NtPaths.note, extra: note.id),
     );
   }
 

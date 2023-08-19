@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notes/config/paths.dart';
-import 'package:notes/cubit/note/note_cubit.dart';
-import 'package:notes/models/note/note_model.dart';
+import 'package:notes/cubit/note_list/note_list_cubit.dart';
 import 'package:notes/pages/home/cubit/home_cubit.dart';
 import 'package:notes/pages/home/home_screen.dart';
+import 'package:notes/pages/note/cubit/note_cubit.dart';
 import 'package:notes/pages/note/note_screen.dart';
 import 'package:notes/pages/splash/splash_screen.dart';
 
@@ -43,10 +43,10 @@ class NtRoutes {
     GoRoute(
       path: NtPaths.home,
       pageBuilder: (_, __) {
-        final noteCubit = _.read<NoteCubit>();
+        final recordCubit = _.read<NoteListCubit>();
         return _customTransitionPage(
           BlocProvider(
-            create: (_) => HomeCubit(noteCubit: noteCubit),
+            create: (_) => HomeCubit(recordCubit: recordCubit),
             child: HomeScreen(),
           ),
         );
@@ -55,9 +55,13 @@ class NtRoutes {
     GoRoute(
       path: NtPaths.note,
       pageBuilder: (_, state) {
-        final note = state.extra == null ? null : state.extra as NoteModel;
+        final recordCubit = _.read<NoteListCubit>();
+        final noteId = state.extra == null ? null : state.extra as String;
         return _customTransitionPage(
-          NoteScreen(note: note),
+          BlocProvider(
+            create: (_) => NoteCubit(recordCubit: recordCubit),
+            child: NoteScreen(noteId: noteId),
+          ),
         );
       },
     ),

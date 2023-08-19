@@ -15,6 +15,23 @@ class HomeScreen extends StatelessWidget {
 
   final _serachController = TextEditingController();
 
+  List<Widget> _actions(BuildContext context) {
+    final cubit = context.read<HomeCubit>();
+
+    return [
+      BlocBuilder<HomeCubit, HomeState>(
+        builder: (_, state) {
+          return IconButton(
+            onPressed: cubit.changeViewType,
+            icon: state.homeViewType == HomeViewType.list
+                ? const Icon(Icons.grid_view)
+                : const Icon(Icons.list),
+          );
+        },
+      ),
+    ];
+  }
+
   Widget _list(List<NoteModel> noteList) {
     return ListView.separated(
       padding: const EdgeInsets.all(8.0),
@@ -45,23 +62,6 @@ class HomeScreen extends StatelessWidget {
       height: 72.0,
       image: AssetImage('assets/icons/logo.png'),
     );
-  }
-
-  List<Widget> _actions(BuildContext context) {
-    final cubit = context.read<HomeCubit>();
-
-    return [
-      BlocBuilder<HomeCubit, HomeState>(
-        builder: (_, state) {
-          return IconButton(
-            onPressed: cubit.changeViewType,
-            icon: state.homeViewType == HomeViewType.list
-                ? const Icon(Icons.grid_view)
-                : const Icon(Icons.list),
-          );
-        },
-      ),
-    ];
   }
 
   Widget _floatingButton(BuildContext context) {

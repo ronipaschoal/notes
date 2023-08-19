@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:notes/cubit/note/note_cubit.dart';
+import 'package:notes/cubit/note_list/note_list_cubit.dart';
 import 'package:notes/helpers/debouncer.dart';
 import 'package:notes/helpers/string.dart';
 import 'package:notes/models/note/note_model.dart';
@@ -8,9 +8,9 @@ part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   final _debouncer = NtDebouncer(milliseconds: 500);
-  final NoteCubit noteCubit;
+  final NoteListCubit recordCubit;
 
-  HomeCubit({required this.noteCubit}) : super(HomeInitialState());
+  HomeCubit({required this.recordCubit}) : super(HomeInitialState());
 
   void changeViewType() {
     if (state is HomeSuccessState) {
@@ -27,10 +27,17 @@ class HomeCubit extends Cubit<HomeState> {
 
   void loadNoteList() {
     emit(HomeLoadingState());
-    final noteList = noteCubit.noteList;
+    final noteList = recordCubit.noteList;
     emit(
       HomeSuccessState(noteList: noteList),
     );
+  }
+
+  bool _test(String attributes, String query) {
+    return attributes
+        .removeDiatrics()
+        .toLowerCase()
+        .contains(query.removeDiatrics().toLowerCase());
   }
 
   void searchNote(String query) {
@@ -39,17 +46,11 @@ class HomeCubit extends Cubit<HomeState> {
         final successState = state as HomeSuccessState;
         emit(
           successState.copyWith(
-            noteList: noteCubit.noteList
+            noteList: recordCubit.noteList
                 .where(
                   (note) =>
-                      note.title
-                          .removeDiatrics()
-                          .toLowerCase()
-                          .contains(query.removeDiatrics().toLowerCase()) ||
-                      note.content
-                          .removeDiatrics()
-                          .toLowerCase()
-                          .contains(query.removeDiatrics().toLowerCase()),
+                      _test(note.title, query) || //
+                      _test(note.content, query),
                 )
                 .toList(),
           ),

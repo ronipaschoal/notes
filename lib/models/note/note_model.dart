@@ -4,11 +4,11 @@ import 'package:notes/models/note/note_entity.dart';
 export 'package:notes/models/note/priority_enum.dart';
 
 class NoteModel extends NoteEntity {
-  NoteModel({
+  const NoteModel({
     super.id,
-    required super.title,
-    required super.content,
-    required super.priority,
+    super.title = '',
+    super.content = '',
+    super.priority = PriorityEnum.low,
   });
 
   factory NoteModel.fromEntity(NoteEntity entity) {
