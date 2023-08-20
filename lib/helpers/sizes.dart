@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SizesHelper {
-  SizesHelper._();
-
+sealed class SizesHelper {
   static Size sizeOf(BuildContext _) => MediaQuery.sizeOf(_);
   static EdgeInsets paddingOf(BuildContext _) => MediaQuery.paddingOf(_);
   static EdgeInsets viewInsetsOf(BuildContext _) => MediaQuery.viewInsetsOf(_);

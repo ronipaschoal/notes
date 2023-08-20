@@ -9,9 +9,7 @@ import 'package:notes/pages/note/cubit/note_cubit.dart';
 import 'package:notes/pages/note/note_screen.dart';
 import 'package:notes/pages/splash/splash_screen.dart';
 
-class NtRoutes {
-  NtRoutes._();
-
+sealed class NtRoutes {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
   static CustomTransitionPage _customTransitionPage(Widget page) {

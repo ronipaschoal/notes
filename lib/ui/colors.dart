@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-class NtColors {
-  NtColors._();
-
+sealed class NtColors {
   static const Color primary = Color(0xFFEED800);
 
   static const Color lightGray = Color(0xFFEBEBEB);

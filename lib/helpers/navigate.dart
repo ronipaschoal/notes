@@ -3,9 +3,7 @@ import 'package:go_router/go_router.dart';
 
 export 'package:notes/config/paths.dart';
 
-class NtNavigate {
-  NtNavigate._();
-
+sealed class NtNavigate {
   static void to(BuildContext context, String path, {Object? extra}) {
     context.push(path, extra: extra);
   }
