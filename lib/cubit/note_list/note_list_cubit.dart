@@ -58,8 +58,10 @@ class NoteListCubit extends Cubit<NoteListState> {
     switch (result) {
       case Success(value: final noteList):
         set(noteList);
+        break;
       case Failure(:final exception):
         print(exception.toString());
+        break;
     }
   }
 }
