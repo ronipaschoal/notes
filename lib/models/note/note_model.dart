@@ -36,7 +36,7 @@ class NoteModel extends NoteEntity {
       id: map['id'] ?? '',
       title: map['title'] ?? '',
       content: map['content'] ?? '',
-      priority: map['priority'] ?? '',
+      priority: map['priority'] ?? PriorityEnum.low,
     );
   }
 

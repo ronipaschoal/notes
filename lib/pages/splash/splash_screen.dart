@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:notes/config/paths.dart';
 import 'package:notes/cubit/note_list/note_list_cubit.dart';
+import 'package:notes/helpers/navigate.dart';
 import 'package:notes/ui/colors.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   void _init(BuildContext context) {
-    // TODO remove backend integration
-    Future.delayed(
-      const Duration(seconds: 2),
-      () => context
-          .read<NoteListCubit>()
-          .loadNoteList()
-          .then((_) => context.go(NtPaths.home)),
-    );
+    context
+        .read<NoteListCubit>()
+        .loadNoteList()
+        .then((_) => NtNavigate.go(context, NtPaths.home));
   }
 
   Widget _body() {

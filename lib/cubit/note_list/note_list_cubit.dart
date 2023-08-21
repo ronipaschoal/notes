@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:notes/datasources/either.dart';
 import 'package:notes/models/note/note_model.dart';
 import 'package:notes/services/note/i_note_service.dart';
 
@@ -52,7 +53,13 @@ class NoteListCubit extends Cubit<NoteListState> {
   }
 
   Future<void> loadNoteList() async {
-    final noteList = await service.getNoteList();
-    set(noteList);
+    final result = await service.getNoteList();
+
+    switch (result) {
+      case Success(value: final noteList):
+        set(noteList);
+      case Failure(:final exception):
+        print(exception.toString());
+    }
   }
 }
