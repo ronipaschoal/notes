@@ -24,7 +24,7 @@ class NoteScreen extends StatelessWidget {
         content: _contentController.text,
       ),
     );
-    NtNavigate.close(context);
+    NavigateHelper.close(context);
   }
 
   Widget _floatingButton(BuildContext context) {

@@ -7,7 +7,7 @@ import 'package:notes/models/note/note_model.dart';
 part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
-  final _debouncer = NtDebouncer(milliseconds: 500);
+  final _debouncer = DebouncerHelper(milliseconds: 500);
   final NoteListCubit recordCubit;
 
   HomeCubit({required this.recordCubit}) : super(HomeInitialState());
@@ -40,22 +40,18 @@ class HomeCubit extends Cubit<HomeState> {
         .contains(query.removeDiatrics().toLowerCase());
   }
 
+  List<NoteModel> _filter(String query) {
+    return recordCubit.noteList
+        .where((note) => _test(note.title, query) || _test(note.content, query))
+        .toList();
+  }
+
   void searchNote(String query) {
-    _debouncer.run(() {
-      if (state is HomeSuccessState) {
+    if (state is HomeSuccessState) {
+      _debouncer.run(() {
         final successState = state as HomeSuccessState;
-        emit(
-          successState.copyWith(
-            noteList: recordCubit.noteList
-                .where(
-                  (note) =>
-                      _test(note.title, query) || //
-                      _test(note.content, query),
-                )
-                .toList(),
-          ),
-        );
-      }
-    });
+        emit(successState.copyWith(noteList: _filter(query)));
+      });
+    }
   }
 }

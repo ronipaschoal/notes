@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:notes/datasources/either.dart';
+import 'package:notes/config/either.dart';
 import 'package:notes/models/note/note_model.dart';
 import 'package:notes/services/note/i_note_service.dart';
 

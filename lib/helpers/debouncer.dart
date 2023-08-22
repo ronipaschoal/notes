@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/Material.dart';
 
-class NtDebouncer {
+class DebouncerHelper {
   final int milliseconds;
   Timer? _timer;
 
-  NtDebouncer({required this.milliseconds});
+  DebouncerHelper({required this.milliseconds});
 
   void run(VoidCallback action) {
     if (_timer != null) {

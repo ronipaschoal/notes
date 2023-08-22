@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:notes/config/endpoints.dart';
+import 'package:notes/helpers/endpoints.dart';
 import 'package:notes/config/http_client/http_client.dart';
 import 'package:notes/config/http_client/i_http_client.dart';
 import 'package:notes/datasources/dtos/note/note.dart';
-import 'package:notes/datasources/either.dart';
+import 'package:notes/config/either.dart';
 import 'package:notes/datasources/repositories/note/i_note_repositorie.dart';
 import 'package:notes/models/note/note_model.dart';
 
@@ -17,7 +17,7 @@ class NoteRepository implements INoteRepository {
   Future<Either<Exception, List<NoteModel>>> getNoteList() async {
     try {
       List<NoteModel> noteList = [];
-      final response = await _httpClient.get(Endpoints.list);
+      final response = await _httpClient.get(EndpointHelper.list);
       final data = json.decode(response.data) as List<dynamic>;
       data
           .map((element) => noteList.add(toModel(NoteDto.fromMap(element))))

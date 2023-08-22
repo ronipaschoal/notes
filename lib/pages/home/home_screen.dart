@@ -66,7 +66,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget _floatingButton(BuildContext context) {
     return FloatingActionButton(
-      onPressed: () => NtNavigate.to(context, NtPaths.note),
+      onPressed: () => NavigateHelper.to(context, NtPaths.note),
       foregroundColor: NtColors.lightGray,
       backgroundColor: NtColors.darkGray,
       tooltip: 'Nova nota',
