@@ -18,7 +18,7 @@ if (!empty($data)) {
   $title = $data->title;
   $content = $data->content;
   $priority = $data->priority;
-  $createdAt = date('Y-m-d H:i:s', $data->createdAt/1000);
+  $created = date('Y-m-d H:i:s', $data->created/1000);
 
   if (empty($id)) {
     echo $idErro = 'id!';
@@ -36,8 +36,8 @@ if (!empty($data)) {
     echo $priorityError = 'priority!';
     $valid = false;
   }
-  echo $createdAt;
-  if (empty($createdAt)) {
+  echo $created;
+  if (empty($created)) {
     echo  $createdError = 'created!';
     $valid = false;
   }
