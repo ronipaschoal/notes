@@ -17,7 +17,7 @@ class NoteRepository implements INoteRepository {
   Future<Either<Exception, List<NoteModel>>> getNoteList() async {
     try {
       List<NoteModel> noteList = [];
-      final response = await _httpClient.get(Endpoints.notes);
+      final response = await _httpClient.get(Endpoints.list);
       final data = json.decode(response.data) as List<dynamic>;
       data
           .map((element) => noteList.add(toModel(NoteDto.fromMap(element))))

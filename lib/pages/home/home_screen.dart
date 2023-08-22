@@ -78,19 +78,23 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _success(BuildContext context, HomeSuccessState state) {
+    const searchSize = 56.0;
     final cubit = context.read<HomeCubit>();
 
     return Column(
       children: [
-        NtTextfield(
-          hintText: 'Pesquisar',
-          prefixIcon: const Icon(Icons.search),
-          controller: _serachController,
-          onChanged: (value) => cubit.searchNote(value),
+        SizedBox(
+          height: searchSize,
+          child: NtTextfield(
+            hintText: 'Pesquisar',
+            prefixIcon: const Icon(Icons.search),
+            controller: _serachController,
+            onChanged: (value) => cubit.searchNote(value),
+          ),
         ),
         Expanded(
           child: SizedBox(
-            height: SizesHelper.getUsableHeightAppBar(context) - 56.0,
+            height: SizesHelper.getUsableHeightAppBar(context) - searchSize,
             child: state.homeViewType == HomeViewType.list
                 ? _list(state.noteList)
                 : _grid(state.noteList),
