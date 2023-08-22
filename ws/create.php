@@ -1,50 +1,45 @@
 <?php
 include_once 'database.php';
 
-if (true || $_SERVER["REQUEST_METHOD"] == "POST") {
+$json = file_get_contents('php://input');
+$data = json_decode($json);
+
+if (!empty($data)) {
+  
+  $valid = true;
+
   $idError = null;
   $titleError = null;
   $contentError = null;
   $priorityError = null;
   $createdError = null;
 
-  if (!empty($_POST)) {
-      $valid = True;
-      $novoUsuario = False;
-      if (!empty($_POST['id'])) {
-          $id = $_POST['id'];
-      } else {
-          $idError = 'need id!';
-          $valid = False;
-      }
+  $id = $data->id;
+  $title = $data->title;
+  $content = $data->content;
+  $priority = $data->priority;
+  $createdAt = date('Y-m-d H:i:s', $data->createdAt/1000);
 
-      if (!empty($_POST['title'])) {
-          $title = $_POST['title'];
-      } else {
-          $titleError = 'need title!';
-          $valid = False;
-      }
-
-      if (!empty($_POST['content'])) {
-          $content = $_POST['content'];
-      } else {
-          $contentError = 'need content!';
-          $valid = False;
-      }
-
-      if (!empty($_POST['priority'])) {
-          $priority = $_POST['priority'];
-      } else {
-          $priorityError = 'need priority!';
-          $valid = False;
-      }
-
-      if (!empty($_POST['created'])) {
-          $created = $_POST['created'];
-      } else {
-          $createdError = 'need created!';
-          $valid = False;
-      }
+  if (empty($id)) {
+    echo $idErro = 'id!';
+    $valid = false;
+  }
+  if (empty($title)) {
+    echo $titleError = 'title!';
+    $valid = false;
+  }
+  if (empty($content)) {
+    echo $contentError = 'content!';
+    $valid = false;
+  }
+  if (is_null($priority)) {
+    echo $priorityError = 'priority!';
+    $valid = false;
+  }
+  echo $createdAt;
+  if (empty($createdAt)) {
+    echo  $createdError = 'created!';
+    $valid = false;
   }
   if ($valid) {
     try{
@@ -53,13 +48,11 @@ if (true || $_SERVER["REQUEST_METHOD"] == "POST") {
       $q = $dbh->prepare($sql);
       $q->execute(array($id, $title, $content, $priority, $created));
 
-      echo json_encode($q);
-
     } catch(PDOException $e) {
-      echo 'Errorr: ' . $e->getMessage();
+      echo 'Errorr: '.$e->getMessage();
     }
   } else {
-    echo json_encode("invalid");
+    echo json_encode(" invalid");
   }
 }
 ?>

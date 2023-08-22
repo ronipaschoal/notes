@@ -15,16 +15,17 @@ class NoteScreen extends StatelessWidget {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
 
-  void _save(BuildContext context, NoteModel note) {
+  void _save(BuildContext context, NoteModel note) async {
     final cubit = context.read<NoteCubit>();
 
-    cubit.add(
-      note.copyWith(
-        title: _titleController.text,
-        content: _contentController.text,
-      ),
+    final noteToSave = note.copyWith(
+      title: _titleController.text,
+      content: _contentController.text,
+      createdAt: DateTime.now(),
     );
-    NavigateHelper.close(context);
+
+    await cubit.save(noteToSave);
+    if (context.mounted) NavigateHelper.close(context);
   }
 
   Widget _floatingButton(BuildContext context) {

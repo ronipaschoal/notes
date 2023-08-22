@@ -20,8 +20,8 @@ class NoteCubit extends Cubit<NoteState> {
     emit(NoteSuccessState(note: recordCubit.get(id)));
   }
 
-  void add(NoteModel note) {
-    emit(NoteLoadingState());
-    recordCubit.save(note);
+  Future<void> save(NoteModel note) async {
+    // emit(NoteLoadingState()); // TODO loading state
+    await recordCubit.save(note);
   }
 }

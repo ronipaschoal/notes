@@ -20,20 +20,57 @@ class NoteRepository implements INoteRepository {
       final response = await _httpClient.get(EndpointHelper.list);
       final data = json.decode(response.data) as List<dynamic>;
       data
-          .map((element) => noteList.add(toModel(NoteDto.fromMap(element))))
+          .map((element) => noteList.add(_toModel(NoteDto.fromMap(element))))
           .toList();
       return Success(noteList);
     } catch (e) {
       return Failure(Exception(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Exception, void>> createNote(NoteModel note) async {
+    try {
+      await _httpClient.post(
+        EndpointHelper.create,
+        data: _toDto(note).toJson(),
+      );
+      return Success(null);
+    } catch (e) {
+      return Failure(Exception(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Exception, void>> updateNote(NoteModel note) async {
+    try {
+      await _httpClient.post(
+        '${EndpointHelper.update}?id=${note.id}',
+        data: _toDto(note).toJson(),
+      );
+      return Success(null);
+    } catch (e) {
+      return Failure(Exception(e.toString()));
+    }
+  }
 }
 
-NoteModel toModel(NoteDto dto) {
+NoteModel _toModel(NoteDto dto) {
   return NoteModel(
     id: dto.id,
     title: dto.title,
     content: dto.content,
     priority: PriorityEnum.values[dto.priority],
+    createdAt: DateTime.parse(dto.created),
+  );
+}
+
+NoteDto _toDto(NoteModel note) {
+  return NoteDto(
+    id: note.id ?? '',
+    title: note.title,
+    content: note.content,
+    priority: note.priority.index,
+    created: note.createdAt!.millisecondsSinceEpoch.toString(),
   );
 }

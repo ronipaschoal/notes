@@ -12,24 +12,40 @@ class NoteListCubit extends Cubit<NoteListState> {
 
   List<NoteModel> get noteList => state.noteList;
 
-  void _add(NoteModel note) {
-    emit(state.copyWith(noteList: [...state.noteList, note]));
+  Future<void> _save(NoteModel note) async {
+    final result = await service.createNote(note);
+
+    switch (result) {
+      case Success():
+        emit(state.copyWith(noteList: [...state.noteList, note]));
+        break;
+      case Failure(:final exception):
+        print(exception.toString());
+        break;
+    }
   }
 
-  void _update(NoteModel note, int index) {
-    final noteList = state.noteList;
-    noteList[index] = note;
+  Future<void> _update(NoteModel note, int index) async {
+    final result = await service.updateNote(note);
 
-    emit(state.copyWith(noteList: noteList));
+    switch (result) {
+      case Success():
+        state.noteList[index] = note;
+        emit(state.copyWith(noteList: state.noteList));
+        break;
+      case Failure(:final exception):
+        print(exception.toString());
+        break;
+    }
   }
 
-  void save(NoteModel note) {
+  Future<void> save(NoteModel note) async {
     final index = state.noteList.indexWhere((element) => element.id == note.id);
 
     if (index > -1 && index < state.noteList.length) {
-      _update(note, index);
+      await _update(note, index);
     } else {
-      _add(note);
+      await _save(note);
     }
   }
 
