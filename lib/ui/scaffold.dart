@@ -3,6 +3,7 @@ import 'package:notes/ui/colors.dart';
 
 class NtScaffold extends StatelessWidget {
   final Widget? title;
+  final Color color;
   final Widget? drawer;
   final Widget? floatingButton;
   final Widget child;
@@ -11,6 +12,7 @@ class NtScaffold extends StatelessWidget {
   const NtScaffold({
     super.key,
     this.title,
+    this.color = NtColors.primary,
     this.floatingButton,
     required this.child,
     this.drawer,
@@ -21,10 +23,10 @@ class NtScaffold extends StatelessWidget {
     return AppBar(
       foregroundColor: NtColors.white,
       backgroundColor: NtColors.darkGray,
-      shape: const Border(
+      shape: Border(
         bottom: BorderSide(
-          color: NtColors.primary,
-          width: 2.0,
+          color: color,
+          width: 4.0,
         ),
       ),
       actions: actions,

@@ -70,7 +70,7 @@ NoteDto _toDto(NoteModel note) {
     id: note.id ?? '',
     title: note.title,
     content: note.content,
-    priority: note.priority.index,
+    priority: note.priority?.index ?? 0,
     created: note.createdAt!.millisecondsSinceEpoch.toString(),
   );
 }

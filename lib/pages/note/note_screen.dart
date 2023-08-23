@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:notes/helpers/navigate.dart';
 import 'package:notes/models/note/note_model.dart';
 import 'package:notes/pages/note/cubit/note_cubit.dart';
@@ -28,58 +29,63 @@ class NoteScreen extends StatelessWidget {
     if (context.mounted) NavigateHelper.close(context);
   }
 
-  Widget _floatingButton(BuildContext context) {
-    return BlocBuilder<NoteCubit, NoteState>(
-      builder: (_, state) {
-        return FloatingActionButton(
-          onPressed: () => _save(context, state.note),
-          foregroundColor: NtColors.lightGray,
-          backgroundColor: NtColors.darkGray,
-          tooltip: 'Salvar',
-          child: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Icon(Icons.check),
+  Widget _floatingButton(BuildContext context, NoteModel note) {
+    return FloatingActionButton(
+      onPressed: () => _save(context, note),
+      foregroundColor: NtColors.lightGray,
+      backgroundColor: NtColors.darkGray,
+      tooltip: 'Salvar',
+      child: const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Icon(Icons.check),
+      ),
+    );
+  }
+
+  Widget _title(BuildContext context, NoteModel note) {
+    return NtTextfield(
+      color: NtColors.white,
+      cursorColor: NtColors.lightGray,
+      hintText: note.title.isEmpty ? 'Adicione um titulo' : null,
+      controller: _titleController..text = note.title,
+    );
+  }
+
+  Widget _info(NoteModel note) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0, top: 8.0, right: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            DateFormat('dd/MM/yy HH:mm')
+                .format(note.createdAt ?? DateTime.now())
+                .toString(),
           ),
-        );
-      },
+          Text(
+            note.priority?.text ?? '',
+            style: const TextStyle(color: NtColors.darkGray),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _title(BuildContext context) {
-    return BlocBuilder<NoteCubit, NoteState>(
-      builder: (_, state) {
-        final note = state.note;
-
-        return NtTextfield(
-          color: NtColors.white,
-          cursorColor: NtColors.lightGray,
-          hintText: note.title.isEmpty ? 'Adicione um titulo' : null,
-          controller: _titleController..text = note.title,
-        );
-      },
+  Widget _content(NoteModel note) {
+    return NtTextfield(
+      hintText: note.content.isEmpty ? 'Adicione uma nota' : null,
+      controller: _contentController..text = note.content,
+      keyboardType: TextInputType.multiline,
+      borderColor: NtColors.white,
     );
   }
 
-  Widget _content(BuildContext context) {
-    return BlocBuilder<NoteCubit, NoteState>(
-      builder: (_, state) {
-        final note = state.note;
-
-        return NtTextfield(
-          hintText: note.content.isEmpty ? 'Adicione uma nota' : null,
-          controller: _contentController..text = note.content,
-          keyboardType: TextInputType.multiline,
-          borderColor: NtColors.white,
-        );
-      },
-    );
-  }
-
-  Widget _body(BuildContext context) {
+  Widget _body(BuildContext context, NoteModel note) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _content(context),
+        _info(note),
+        _content(note),
       ],
     );
   }
@@ -89,10 +95,17 @@ class NoteScreen extends StatelessWidget {
     final cubit = context.read<NoteCubit>();
     cubit.get(noteId ?? '');
 
-    return NtScaffold(
-      title: _title(context),
-      floatingButton: _floatingButton(context),
-      child: _body(context),
+    return BlocBuilder<NoteCubit, NoteState>(
+      builder: (_, state) {
+        final note = state.note;
+
+        return NtScaffold(
+          title: _title(context, note),
+          color: note.priority?.color ?? NtColors.primary,
+          floatingButton: _floatingButton(context, note),
+          child: _body(context, note),
+        );
+      },
     );
   }
 }

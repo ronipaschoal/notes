@@ -6,7 +6,7 @@ class NoteEntity {
   final String? id;
   final String title;
   final String content;
-  final PriorityEnum priority;
+  final PriorityEnum? priority;
   final DateTime? createdAt;
 
   const NoteEntity({

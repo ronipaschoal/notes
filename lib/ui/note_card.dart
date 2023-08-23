@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:notes/helpers/navigate.dart';
 import 'package:notes/models/note/note_model.dart';
 import 'package:notes/ui/colors.dart';
@@ -12,8 +13,44 @@ class NtNoteCard extends StatelessWidget {
       width: double.maxFinite,
       height: double.maxFinite,
       decoration: BoxDecoration(
-        color: note.priority.color,
+        color: note.priority?.color,
         borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+      ),
+    );
+  }
+
+  Widget _content() {
+    return Container(
+      height: double.maxFinite,
+      margin: const EdgeInsets.only(
+        left: 8.0,
+        top: 0.4,
+        right: 2.0,
+        bottom: 0.4,
+      ),
+      decoration: const BoxDecoration(
+        color: NtColors.white,
+        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, top: 6.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(note.title),
+                Text(
+                  DateFormat('dd/MM/yy HH:mm')
+                      .format(note.createdAt ?? DateTime.now())
+                      .toString(),
+                  style: const TextStyle(fontSize: 12.0),
+                ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
@@ -22,25 +59,7 @@ class NtNoteCard extends StatelessWidget {
     return Stack(
       children: [
         _priorityColor(),
-        Container(
-          height: double.maxFinite,
-          margin: const EdgeInsets.only(
-            left: 8.0,
-            top: 0.4,
-            right: 2.0,
-            bottom: 0.4,
-          ),
-          decoration: const BoxDecoration(
-            color: NtColors.white,
-            borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          ),
-          child: Row(
-            children: [
-              const SizedBox(width: 16.0),
-              Text(note.title),
-            ],
-          ),
-        ),
+        _content(),
       ],
     );
   }

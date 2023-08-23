@@ -8,7 +8,7 @@ class NoteModel extends NoteEntity {
     super.id,
     super.title = '',
     super.content = '',
-    super.priority = PriorityEnum.low,
+    super.priority,
     super.createdAt,
   });
 
@@ -28,7 +28,7 @@ class NoteModel extends NoteEntity {
     result.addAll({'id': id});
     result.addAll({'title': title});
     result.addAll({'content': content});
-    result.addAll({'priority': priority.index});
+    result.addAll({'priority': priority?.index ?? 0});
     result.addAll({'createdAt': createdAt.toString()});
 
     return result;
