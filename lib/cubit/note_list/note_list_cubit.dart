@@ -53,9 +53,18 @@ class NoteListCubit extends Cubit<NoteListState> {
     return state.noteList.firstWhere((element) => element.id == id);
   }
 
-  void delete(NoteModel note) {
-    final noteList = state.noteList;
-    noteList.removeWhere((element) => element.id == note.id);
+  void delete(NoteModel note) async {
+    final result = await service.deleteNote(note);
+
+    switch (result) {
+      case Success():
+        state.noteList.removeWhere((element) => element.id == note.id);
+        emit(state.copyWith(noteList: state.noteList));
+        break;
+      case Failure(:final exception):
+        print(exception.toString());
+        break;
+    }
 
     emit(state.copyWith(noteList: noteList));
   }

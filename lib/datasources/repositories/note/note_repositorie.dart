@@ -45,8 +45,20 @@ class NoteRepository implements INoteRepository {
   Future<Either<Exception, void>> updateNote(NoteModel note) async {
     try {
       await _httpClient.post(
-        '${EndpointHelper.update}?id=${note.id}',
+        EndpointHelper.update,
         data: _toDto(note).toJson(),
+      );
+      return Success(null);
+    } catch (e) {
+      return Failure(Exception(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Exception, void>> deleteNote(NoteModel note) async {
+    try {
+      await _httpClient.post(
+        '${EndpointHelper.delete}?id=${note.id}',
       );
       return Success(null);
     } catch (e) {

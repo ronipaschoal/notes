@@ -22,4 +22,9 @@ class NoteService implements INoteService {
   Future<Either<Exception, void>> updateNote(NoteModel note) async {
     return await repository.updateNote(note);
   }
+
+  @override
+  Future<Either<Exception, void>> deleteNote(NoteModel note) async {
+    return await repository.deleteNote(note);
+  }
 }

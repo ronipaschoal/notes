@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:notes/cubit/note_list/note_list_cubit.dart';
 import 'package:notes/helpers/navigate.dart';
 import 'package:notes/helpers/sizes.dart';
 import 'package:notes/models/note/note_model.dart';
@@ -52,6 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
         note: noteList[index],
         onTap: () =>
             NavigateHelper.to(context, NtPaths.note, extra: noteList[index].id),
+        onLongPress: () =>
+            context.read<NoteListCubit>().delete(noteList[index]),
       ),
     );
   }
@@ -71,6 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
         note: noteList[index],
         onTap: () =>
             NavigateHelper.to(context, NtPaths.note, extra: noteList[index].id),
+        onLongPress: () =>
+            context.read<NoteListCubit>().delete(noteList[index]),
       ),
     );
   }
