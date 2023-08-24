@@ -10,7 +10,7 @@ class SplashScreen extends StatelessWidget {
   void _init(BuildContext context) {
     context
         .read<NoteListCubit>()
-        .loadNoteList()
+        .readNoteList()
         .then((_) => NavigateHelper.go(context, NtPaths.home));
   }
 

@@ -9,13 +9,13 @@ class NoteService implements INoteService {
   NoteService({required this.repository});
 
   @override
-  Future<Either<Exception, List<NoteModel>>> getNoteList() async {
-    return await repository.getNoteList();
+  Future<Either<Exception, void>> createNote(NoteModel note) async {
+    return await repository.createNote(note);
   }
 
   @override
-  Future<Either<Exception, void>> createNote(NoteModel note) async {
-    return await repository.createNote(note);
+  Future<Either<Exception, List<NoteModel>>> readNoteList() async {
+    return await repository.readNoteList();
   }
 
   @override

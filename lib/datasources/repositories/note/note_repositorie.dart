@@ -14,7 +14,20 @@ class NoteRepository implements INoteRepository {
   NoteRepository();
 
   @override
-  Future<Either<Exception, List<NoteModel>>> getNoteList() async {
+  Future<Either<Exception, void>> createNote(NoteModel note) async {
+    try {
+      await _httpClient.post(
+        EndpointHelper.create,
+        data: _toDto(note).toJson(),
+      );
+      return Success(null);
+    } catch (e) {
+      return Failure(Exception(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Exception, List<NoteModel>>> readNoteList() async {
     try {
       List<NoteModel> noteList = [];
       final response = await _httpClient.get(EndpointHelper.list);
@@ -23,19 +36,6 @@ class NoteRepository implements INoteRepository {
           .map((element) => noteList.add(_toModel(NoteDto.fromMap(element))))
           .toList();
       return Success(noteList);
-    } catch (e) {
-      return Failure(Exception(e.toString()));
-    }
-  }
-
-  @override
-  Future<Either<Exception, void>> createNote(NoteModel note) async {
-    try {
-      await _httpClient.post(
-        EndpointHelper.create,
-        data: _toDto(note).toJson(),
-      );
-      return Success(null);
     } catch (e) {
       return Failure(Exception(e.toString()));
     }

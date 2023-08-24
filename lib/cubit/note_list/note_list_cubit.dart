@@ -12,12 +12,25 @@ class NoteListCubit extends Cubit<NoteListState> {
 
   List<NoteModel> get noteList => state.noteList;
 
-  Future<void> _save(NoteModel note) async {
+  Future<void> _create(NoteModel note) async {
     final result = await service.createNote(note);
 
     switch (result) {
       case Success():
         emit(state.copyWith(noteList: [...state.noteList, note]));
+        break;
+      case Failure(:final exception):
+        print(exception.toString());
+        break;
+    }
+  }
+
+  Future<void> readNoteList() async {
+    final result = await service.readNoteList();
+
+    switch (result) {
+      case Success(value: final noteList):
+        set(noteList);
         break;
       case Failure(:final exception):
         print(exception.toString());
@@ -39,20 +52,6 @@ class NoteListCubit extends Cubit<NoteListState> {
     }
   }
 
-  Future<void> save(NoteModel note) async {
-    final index = state.noteList.indexWhere((element) => element.id == note.id);
-
-    if (index > -1 && index < state.noteList.length) {
-      await _update(note, index);
-    } else {
-      await _save(note);
-    }
-  }
-
-  NoteModel get(String id) {
-    return state.noteList.firstWhere((element) => element.id == id);
-  }
-
   void delete(NoteModel note) async {
     final result = await service.deleteNote(note);
 
@@ -69,24 +68,25 @@ class NoteListCubit extends Cubit<NoteListState> {
     emit(state.copyWith(noteList: noteList));
   }
 
+  Future<void> save(NoteModel note) async {
+    final index = state.noteList.indexWhere((element) => element.id == note.id);
+
+    if (index > -1 && index < state.noteList.length) {
+      await _update(note, index);
+    } else {
+      await _create(note);
+    }
+  }
+
+  NoteModel get(String id) {
+    return state.noteList.firstWhere((element) => element.id == id);
+  }
+
   void clear() {
     emit(state.copyWith(noteList: []));
   }
 
   void set(List<NoteModel> noteList) {
     emit(state.copyWith(noteList: noteList));
-  }
-
-  Future<void> loadNoteList() async {
-    final result = await service.getNoteList();
-
-    switch (result) {
-      case Success(value: final noteList):
-        set(noteList);
-        break;
-      case Failure(:final exception):
-        print(exception.toString());
-        break;
-    }
   }
 }
