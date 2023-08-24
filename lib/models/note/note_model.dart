@@ -8,7 +8,7 @@ class NoteModel extends NoteEntity {
     super.id,
     super.title = '',
     super.content = '',
-    super.priority,
+    super.priority = PriorityEnum.low,
     super.createdAt,
   });
 

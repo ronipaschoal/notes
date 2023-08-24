@@ -22,7 +22,6 @@ class NoteScreen extends StatelessWidget {
     final noteToSave = note.copyWith(
       title: _titleController.text,
       content: _contentController.text,
-      createdAt: DateTime.now(),
     );
 
     await cubit.save(noteToSave);

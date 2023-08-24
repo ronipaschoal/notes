@@ -14,7 +14,14 @@ class NoteCubit extends Cubit<NoteState> {
     emit(NoteLoadingState());
     if (id.isEmpty) {
       const uuid = Uuid();
-      emit(NoteSuccessState(note: NoteModel(id: uuid.v1())));
+      emit(
+        NoteSuccessState(
+          note: NoteModel(
+            id: uuid.v1(),
+            createdAt: DateTime.now(),
+          ),
+        ),
+      );
       return;
     }
     emit(NoteSuccessState(note: recordCubit.get(id)));
