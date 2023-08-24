@@ -27,10 +27,11 @@ class HomeCubit extends Cubit<HomeState> {
 
   void loadNoteList() {
     emit(HomeLoadingState());
-    final noteList = recordCubit.noteList;
-    emit(
-      HomeSuccessState(noteList: noteList),
-    );
+
+    recordCubit.stream
+        .listen((_) => emit(HomeSuccessState(noteList: _.noteList)));
+
+    emit(HomeSuccessState(noteList: recordCubit.noteList));
   }
 
   bool _test(String attributes, String query) {

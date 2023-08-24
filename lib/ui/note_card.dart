@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:notes/helpers/navigate.dart';
 import 'package:notes/models/note/note_model.dart';
 import 'package:notes/ui/colors.dart';
 
 class NtNoteCard extends StatelessWidget {
   final NoteModel note;
-  const NtNoteCard({super.key, required this.note});
+  final GestureTapCallback? onTap;
+  final GestureLongPressCallback? onLongPress;
+
+  const NtNoteCard({
+    super.key,
+    required this.note,
+    this.onTap,
+    this.onLongPress,
+  });
 
   Widget _priorityColor() {
     return Container(
@@ -24,9 +31,9 @@ class NtNoteCard extends StatelessWidget {
       height: double.maxFinite,
       margin: const EdgeInsets.only(
         left: 8.0,
-        top: 0.4,
+        top: 1.0,
         right: 2.0,
-        bottom: 0.4,
+        bottom: 1.0,
       ),
       decoration: const BoxDecoration(
         color: NtColors.white,
@@ -69,13 +76,12 @@ class NtNoteCard extends StatelessWidget {
       height: 56.0,
       width: double.maxFinite,
       decoration: BoxDecoration(
-        color: NtColors.lightGray,
         borderRadius: const BorderRadius.all(Radius.circular(16.0)),
         boxShadow: [
           BoxShadow(
             color: NtColors.midGray.withOpacity(0.5),
-            spreadRadius: 1,
             blurRadius: 1,
+            spreadRadius: 1,
           ),
         ],
       ),
@@ -83,22 +89,16 @@ class NtNoteCard extends StatelessWidget {
     );
   }
 
-  Widget _gestureDetector(BuildContext context, Widget child) {
+  Widget _body() {
     return GestureDetector(
-      child: _container(child),
-      onTap: () => NavigateHelper.to(context, NtPaths.note, extra: note.id),
-    );
-  }
-
-  Widget _body(BuildContext context) {
-    return _gestureDetector(
-      context,
-      Text(note.title),
+      onTap: onTap,
+      onLongPress: onLongPress,
+      child: _container(Text(note.title)),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return _body(context);
+    return _body();
   }
 }

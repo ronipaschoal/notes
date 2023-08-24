@@ -8,29 +8,39 @@ import 'package:notes/ui/colors.dart';
 import 'package:notes/ui/scaffold.dart';
 import 'package:notes/ui/widgets/text_field.dart';
 
-class NoteScreen extends StatelessWidget {
+class NoteScreen extends StatefulWidget {
   final String? noteId;
 
-  NoteScreen({super.key, this.noteId});
+  const NoteScreen({super.key, this.noteId});
 
+  @override
+  State<NoteScreen> createState() => _NoteScreenState();
+}
+
+class _NoteScreenState extends State<NoteScreen> {
+  late final _cubit = context.read<NoteCubit>();
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
 
-  void _save(BuildContext context, NoteModel note) async {
-    final cubit = context.read<NoteCubit>();
+  @override
+  void initState() {
+    super.initState();
+    _cubit.get(widget.noteId ?? '');
+  }
 
+  void _save(NoteModel note) async {
     final noteToSave = note.copyWith(
       title: _titleController.text,
       content: _contentController.text,
     );
 
-    await cubit.save(noteToSave);
+    await _cubit.save(noteToSave);
     if (context.mounted) NavigateHelper.close(context);
   }
 
-  Widget _floatingButton(BuildContext context, NoteModel note) {
+  Widget _floatingButton(NoteModel note) {
     return FloatingActionButton(
-      onPressed: () => _save(context, note),
+      onPressed: () => _save(note),
       foregroundColor: NtColors.lightGray,
       backgroundColor: NtColors.darkGray,
       tooltip: 'Salvar',
@@ -41,7 +51,7 @@ class NoteScreen extends StatelessWidget {
     );
   }
 
-  Widget _title(BuildContext context, NoteModel note) {
+  Widget _title(NoteModel note) {
     return NtTextfield(
       color: NtColors.white,
       cursorColor: NtColors.lightGray,
@@ -79,7 +89,7 @@ class NoteScreen extends StatelessWidget {
     );
   }
 
-  Widget _body(BuildContext context, NoteModel note) {
+  Widget _body(NoteModel note) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -91,18 +101,15 @@ class NoteScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<NoteCubit>();
-    cubit.get(noteId ?? '');
-
     return BlocBuilder<NoteCubit, NoteState>(
       builder: (_, state) {
         final note = state.note;
 
         return NtScaffold(
-          title: _title(context, note),
+          title: _title(note),
           color: note.priority?.color ?? NtColors.primary,
-          floatingButton: _floatingButton(context, note),
-          child: _body(context, note),
+          floatingButton: _floatingButton(note),
+          child: _body(note),
         );
       },
     );

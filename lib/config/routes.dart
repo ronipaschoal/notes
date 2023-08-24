@@ -45,7 +45,7 @@ sealed class NtRoutes {
         return _customTransitionPage(
           BlocProvider(
             create: (_) => HomeCubit(recordCubit: recordCubit),
-            child: HomeScreen(),
+            child: const HomeScreen(),
           ),
         );
       },

@@ -10,19 +10,29 @@ import 'package:notes/ui/note_card.dart';
 import 'package:notes/ui/scaffold.dart';
 import 'package:notes/ui/widgets/text_field.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final _serachController = TextEditingController();
+  late final _cubit = context.read<HomeCubit>();
 
-  List<Widget> _actions(BuildContext context) {
-    final cubit = context.read<HomeCubit>();
+  @override
+  void initState() {
+    super.initState();
+    _cubit.loadNoteList();
+  }
 
+  List<Widget> _actions() {
     return [
       BlocBuilder<HomeCubit, HomeState>(
         builder: (_, state) {
           return IconButton(
-            onPressed: cubit.changeViewType,
+            onPressed: _cubit.changeViewType,
             icon: state.homeViewType == HomeViewType.list
                 ? const Icon(Icons.grid_view)
                 : const Icon(Icons.list),
@@ -38,7 +48,11 @@ class HomeScreen extends StatelessWidget {
       shrinkWrap: true,
       itemCount: noteList.length,
       separatorBuilder: (_, __) => const SizedBox(height: 8.0),
-      itemBuilder: (_, index) => NtNoteCard(note: noteList[index]),
+      itemBuilder: (_, index) => NtNoteCard(
+        note: noteList[index],
+        onTap: () =>
+            NavigateHelper.to(context, NtPaths.note, extra: noteList[index].id),
+      ),
     );
   }
 
@@ -53,7 +67,11 @@ class HomeScreen extends StatelessWidget {
         mainAxisSpacing: 16.0,
         childAspectRatio: 1.45,
       ),
-      itemBuilder: (_, index) => NtNoteCard(note: noteList[index]),
+      itemBuilder: (_, index) => NtNoteCard(
+        note: noteList[index],
+        onTap: () =>
+            NavigateHelper.to(context, NtPaths.note, extra: noteList[index].id),
+      ),
     );
   }
 
@@ -64,7 +82,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _floatingButton(BuildContext context) {
+  Widget _floatingButton() {
     return FloatingActionButton(
       onPressed: () => NavigateHelper.to(context, NtPaths.note),
       foregroundColor: NtColors.lightGray,
@@ -77,9 +95,8 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _success(BuildContext context, HomeSuccessState state) {
+  Widget _success(HomeSuccessState state) {
     const searchSize = 56.0;
-    final cubit = context.read<HomeCubit>();
 
     return Column(
       children: [
@@ -89,7 +106,7 @@ class HomeScreen extends StatelessWidget {
             hintText: 'Pesquisar',
             prefixIcon: const Icon(Icons.search),
             controller: _serachController,
-            onChanged: (value) => cubit.searchNote(value),
+            onChanged: (value) => _cubit.searchNote(value),
           ),
         ),
         Expanded(
@@ -104,7 +121,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _body(BuildContext context) {
+  Widget _body() {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (_, state) {
         return switch (state) {
@@ -112,7 +129,7 @@ class HomeScreen extends StatelessWidget {
           HomeInitialState() => const Center(child: Text('TODO')),
           HomeLoadingState() => const Center(child: Text('TODO')),
           HomeErrorState() => Center(child: Text(state.error)),
-          HomeSuccessState() => _success(context, state),
+          HomeSuccessState() => _success(state),
         };
       },
     );
@@ -120,15 +137,12 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<HomeCubit>();
-    cubit.loadNoteList();
-
     return NtScaffold(
       title: _title(),
-      actions: _actions(context),
+      actions: _actions(),
       drawer: const HomeDrawer(),
-      floatingButton: _floatingButton(context),
-      child: _body(context),
+      floatingButton: _floatingButton(),
+      child: _body(),
     );
   }
 }

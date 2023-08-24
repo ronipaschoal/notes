@@ -22,7 +22,10 @@ class HomeDrawer extends StatelessWidget {
 
   Widget _itemButton(BuildContext context, String text, String path) {
     return TextButton(
-      onPressed: () => NavigateHelper.to(context, path),
+      onPressed: () {
+        NavigateHelper.close(context);
+        NavigateHelper.to(context, path);
+      },
       style: ButtonStyle(
         alignment: Alignment.center,
         overlayColor: MaterialStateProperty.all(NtColors.primary),
