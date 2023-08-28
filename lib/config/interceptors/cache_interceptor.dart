@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CacheInterceptor implements InterceptorsWrapper {
   @override
@@ -15,7 +17,13 @@ class CacheInterceptor implements InterceptorsWrapper {
     Response response,
     ResponseInterceptorHandler handler,
   ) async {
-    //TODO: implement onRequest
+    if (response.requestOptions.method == 'GET') {
+      final instance = await SharedPreferences.getInstance();
+      instance.setString(
+        'notes',
+        jsonEncode(response.data),
+      );
+    }
     handler.resolve(response);
   }
 
@@ -24,6 +32,11 @@ class CacheInterceptor implements InterceptorsWrapper {
     DioException err,
     ErrorInterceptorHandler handler,
   ) async {
-    //TODO: implement onRequest
+    final instance = await SharedPreferences.getInstance();
+    final json = instance.getString('notes');
+    if (json != null) {
+      final data = jsonDecode(json);
+      handler.resolve(Response(requestOptions: err.requestOptions, data: data));
+    }
   }
 }

@@ -4,10 +4,17 @@ import 'package:notes/cubit/note_list/note_list_cubit.dart';
 import 'package:notes/helpers/navigate.dart';
 import 'package:notes/ui/colors.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
-  void _init(BuildContext context) {
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
     context
         .read<NoteListCubit>()
         .readNoteList()
@@ -26,8 +33,6 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _init(context);
-
     return MaterialApp(
       title: 'Notes Splash',
       home: _body(),

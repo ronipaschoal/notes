@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notes/ui/colors.dart';
+import 'package:notes/ui/connection_status_bar.dart';
 
 class NtScaffold extends StatelessWidget {
   final Widget? title;
@@ -42,6 +43,18 @@ class NtScaffold extends StatelessWidget {
     );
   }
 
+  SizedBox _usefulArea(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        children: [
+          const ConnectionStatusBar(),
+          Expanded(child: child),
+        ],
+      ),
+    );
+  }
+
   Widget _body(BuildContext context) {
     return _unfocus(
       Scaffold(
@@ -49,7 +62,7 @@ class NtScaffold extends StatelessWidget {
         appBar: title == null ? null : _appBar(),
         drawer: drawer,
         floatingActionButton: floatingButton,
-        body: child,
+        body: _usefulArea(context),
       ),
     );
   }
