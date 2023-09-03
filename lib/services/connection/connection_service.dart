@@ -11,11 +11,21 @@ class ConnectionService implements IConnectionService {
   // TODO implements
   void _sincData() {}
 
+  bool _isOnline(ConnectivityResult connectivityResult) {
+    return connectivityResult != ConnectivityResult.none;
+  }
+
   @override
-  Stream<bool> onChange() {
+  Future<bool> init() async {
+    final connectivityResult = await connectivity.checkConnectivity();
+    return _isOnline(connectivityResult);
+  }
+
+  @override
+  Stream<bool> stream() {
     return connectivity.onConnectivityChanged.map(
-      (event) {
-        final isOnline = event != ConnectivityResult.none;
+      (connectivityResult) {
+        final isOnline = _isOnline(connectivityResult);
         if (_wasOffline && isOnline) _sincData();
         _wasOffline = !isOnline;
         return isOnline;

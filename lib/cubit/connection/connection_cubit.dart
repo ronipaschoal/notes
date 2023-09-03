@@ -10,11 +10,12 @@ class AppConnectionCubit extends Cubit<AppConnectionState> {
   AppConnectionCubit({required this.connectionService})
       : super(ConnectionInitialState());
 
+  void _connectionState(bool isOnline) {
+    isOnline ? emit(ConnectionOnlineState()) : emit(ConnectionOfflineState());
+  }
+
   void init() {
-    connectionService.onChange().listen(
-          (event) => event
-              ? emit(ConnectionOnlineState())
-              : emit(ConnectionOfflineState()),
-        );
+    connectionService.init().then((isOnline) => _connectionState(isOnline));
+    connectionService.stream().listen((isOnline) => _connectionState(isOnline));
   }
 }
