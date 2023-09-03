@@ -1,67 +1,73 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notes/config/either.dart';
+import 'package:notes/datasources/cache/note/i_note_cache.dart';
+import 'package:notes/datasources/repositories/note/i_note_repositorie.dart';
 import 'package:notes/models/note/note_model.dart';
-import 'package:notes/services/note/i_note_service.dart';
 
 part 'note_list_state.dart';
 
 class NoteListCubit extends Cubit<NoteListState> {
-  final INoteService service;
+  final INoteRepository repository;
+  final INoteCache cache;
 
-  NoteListCubit({required this.service}) : super(NoteListState());
+  NoteListCubit({
+    required this.repository,
+    required this.cache,
+  }) : super(NoteListState());
 
   List<NoteModel> get noteList => state.noteList;
 
   Future<void> _create(NoteModel note) async {
-    final result = await service.createNote(note);
+    final result = await repository.createNote(note);
 
     switch (result) {
       case Success():
         emit(state.copyWith(noteList: [...state.noteList, note]));
         break;
-      case Failure(:final exception):
-        print(exception.toString());
+      case Failure():
+        print('_create Failure:');
         break;
     }
   }
 
   Future<void> readNoteList() async {
-    final result = await service.readNoteList();
+    final result = await repository.readNoteList();
 
     switch (result) {
       case Success(value: final noteList):
         set(noteList);
         break;
-      case Failure(:final exception):
-        print(exception.toString());
+      case Failure():
+        final noteList = await cache.getNoteList();
+        set(noteList);
         break;
     }
   }
 
   Future<void> _update(NoteModel note, int index) async {
-    final result = await service.updateNote(note);
+    final result = await repository.updateNote(note);
 
     switch (result) {
       case Success():
         state.noteList[index] = note;
         emit(state.copyWith(noteList: state.noteList));
         break;
-      case Failure(:final exception):
-        print(exception.toString());
+      case Failure():
+        print('_update Failure:');
         break;
     }
   }
 
   void delete(NoteModel note) async {
-    final result = await service.deleteNote(note);
+    final result = await repository.deleteNote(note);
 
     switch (result) {
       case Success():
         state.noteList.removeWhere((element) => element.id == note.id);
         emit(state.copyWith(noteList: state.noteList));
         break;
-      case Failure(:final exception):
-        print(exception.toString());
+      case Failure():
+        print('delete Failure:');
         break;
     }
 

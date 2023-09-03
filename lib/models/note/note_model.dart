@@ -39,8 +39,8 @@ class NoteModel extends NoteEntity {
       id: map['id'] ?? '',
       title: map['title'] ?? '',
       content: map['content'] ?? '',
-      priority: map['priority'] ?? PriorityEnum.low,
-      createdAt: map['createdAt'] ?? '',
+      priority: PriorityEnum.values[map['priority'] ?? 0],
+      createdAt: DateTime.parse(map['createdAt']),
     );
   }
 

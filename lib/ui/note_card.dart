@@ -56,7 +56,7 @@ class NtNoteCard extends StatelessWidget {
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );

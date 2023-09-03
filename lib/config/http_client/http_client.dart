@@ -1,15 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:notes/config/http_client/i_http_client.dart';
-import 'package:notes/config/interceptors/cache_interceptor.dart';
 
 class HttpClient implements IHttpClient {
   final Dio _http;
 
-  HttpClient(this._http) {
-    _http
-      ..options.responseType = ResponseType.json
-      ..interceptors.add(CacheInterceptor());
-  }
+  HttpClient(this._http);
 
   @override
   Future<Response> get(
