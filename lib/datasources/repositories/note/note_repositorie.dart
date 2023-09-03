@@ -74,6 +74,7 @@ NoteModel _toModel(NoteDto dto) {
     content: dto.content,
     priority: PriorityEnum.values[dto.priority],
     createdAt: DateTime.parse(dto.created),
+    updatedAt: dto.updated != null ? DateTime.parse(dto.updated!) : null,
   );
 }
 
@@ -84,5 +85,6 @@ NoteDto _toDto(NoteModel note) {
     content: note.content,
     priority: note.priority?.index ?? 0,
     created: note.createdAt!.millisecondsSinceEpoch.toString(),
+    updated: note.updatedAt?.millisecondsSinceEpoch.toString(),
   );
 }

@@ -8,6 +8,7 @@ class NoteEntity {
   final String content;
   final PriorityEnum? priority;
   final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   const NoteEntity({
     this.id,
@@ -15,5 +16,6 @@ class NoteEntity {
     required this.content,
     required this.priority,
     required this.createdAt,
+    this.updatedAt,
   });
 }

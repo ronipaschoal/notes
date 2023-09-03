@@ -17,15 +17,16 @@ class NoteListCubit extends Cubit<NoteListState> {
 
   List<NoteModel> get noteList => state.noteList;
 
-  Future<void> _create(NoteModel note) async {
+  Future<void> _create(NoteModel note, [bool getList = true]) async {
+    emit(state.copyWith(noteList: [...state.noteList, note]));
+    await cache.saveNoteList(noteList);
     final result = await repository.createNote(note);
 
     switch (result) {
       case Success():
-        emit(state.copyWith(noteList: [...state.noteList, note]));
+        if (getList) await readNoteList();
         break;
       case Failure():
-        print('_create Failure:');
         break;
     }
   }
@@ -35,6 +36,7 @@ class NoteListCubit extends Cubit<NoteListState> {
 
     switch (result) {
       case Success(value: final noteList):
+        await cache.saveNoteList(noteList);
         set(noteList);
         break;
       case Failure():
@@ -44,16 +46,17 @@ class NoteListCubit extends Cubit<NoteListState> {
     }
   }
 
-  Future<void> _update(NoteModel note, int index) async {
+  Future<void> _update(NoteModel note, int index, [bool getList = true]) async {
+    state.noteList[index] = note;
+    emit(state.copyWith(noteList: state.noteList));
+    await cache.saveNoteList(noteList);
     final result = await repository.updateNote(note);
 
     switch (result) {
       case Success():
-        state.noteList[index] = note;
-        emit(state.copyWith(noteList: state.noteList));
+        if (getList) await readNoteList();
         break;
       case Failure():
-        print('_update Failure:');
         break;
     }
   }
@@ -75,14 +78,25 @@ class NoteListCubit extends Cubit<NoteListState> {
   }
 
   Future<void> save(NoteModel note) async {
-    final index = state.noteList.indexWhere((element) => element.id == note.id);
+    await sync();
 
-    if (index > -1 && index < state.noteList.length) {
-      await _update(note, index);
-    } else {
-      await _create(note);
-    }
+    final index = _getNoteIndex(note);
+    (index == -1) // -1 = not found
+        ? await _create(note)
+        : await _update(note, index);
   }
+
+  Future<void> sync() async {
+    final noteList = await cache.getNoteListToSync();
+
+    noteList.map((note) async {
+      final index = _getNoteIndex(note);
+      await _update(note, index, false);
+    }).toList();
+  }
+
+  int _getNoteIndex(NoteModel note) =>
+      state.noteList.indexWhere((element) => element.id == note.id);
 
   NoteModel get(String id) {
     return state.noteList.firstWhere((element) => element.id == id);

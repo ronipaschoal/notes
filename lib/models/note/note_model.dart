@@ -10,6 +10,7 @@ class NoteModel extends NoteEntity {
     super.content = '',
     super.priority = PriorityEnum.low,
     super.createdAt,
+    super.updatedAt,
   });
 
   factory NoteModel.fromEntity(NoteEntity entity) {
@@ -19,6 +20,7 @@ class NoteModel extends NoteEntity {
       content: entity.content,
       priority: entity.priority,
       createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
     );
   }
 
@@ -30,6 +32,7 @@ class NoteModel extends NoteEntity {
     result.addAll({'content': content});
     result.addAll({'priority': priority?.index ?? 0});
     result.addAll({'createdAt': createdAt.toString()});
+    result.addAll({'updatedAt': updatedAt?.toString() ?? ''});
 
     return result;
   }
@@ -41,6 +44,9 @@ class NoteModel extends NoteEntity {
       content: map['content'] ?? '',
       priority: PriorityEnum.values[map['priority'] ?? 0],
       createdAt: DateTime.parse(map['createdAt']),
+      updatedAt: map['updatedAt'] == null || map['updatedAt'] == '' //
+          ? null
+          : DateTime.parse(map['updatedAt']),
     );
   }
 
@@ -55,6 +61,7 @@ class NoteModel extends NoteEntity {
     String? content,
     PriorityEnum? priority,
     DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
     return NoteModel(
       id: id ?? this.id,
@@ -62,6 +69,12 @@ class NoteModel extends NoteEntity {
       content: content ?? this.content,
       priority: priority ?? this.priority,
       createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt,
     );
+  }
+
+  @override
+  String toString() {
+    return 'NoteModel(id: $id, title: $title, content: $content, priority: $priority, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 }

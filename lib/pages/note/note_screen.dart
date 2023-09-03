@@ -32,6 +32,7 @@ class _NoteScreenState extends State<NoteScreen> {
     final noteToSave = note.copyWith(
       title: _titleController.text,
       content: _contentController.text,
+      updatedAt: null,
     );
 
     await _cubit.save(noteToSave);

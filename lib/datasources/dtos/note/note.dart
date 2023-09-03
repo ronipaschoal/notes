@@ -6,6 +6,7 @@ class NoteDto {
   String content;
   int priority;
   String created;
+  String? updated;
 
   NoteDto({
     required this.id,
@@ -13,6 +14,7 @@ class NoteDto {
     required this.content,
     required this.priority,
     required this.created,
+    this.updated,
   });
 
   factory NoteDto.fromMap(Map<String, dynamic> map) {
@@ -22,6 +24,7 @@ class NoteDto {
       content: map['content'] ?? '',
       priority: int.tryParse(map['priority']) ?? 0,
       created: DateTime.parse(map['created']).toString(),
+      updated: DateTime.parse(map['updated']).toString(),
     );
   }
 
@@ -33,6 +36,7 @@ class NoteDto {
     result.addAll({'content': content});
     result.addAll({'priority': priority});
     result.addAll({'created': created});
+    result.addAll({'updated': updated});
 
     return result;
   }
@@ -41,6 +45,6 @@ class NoteDto {
 
   @override
   String toString() {
-    return 'NoteDto(id: $id, title: $title, content: $content, priority: $priority, created: $created)';
+    return 'NoteDto(id: $id, title: $title, content: $content, priority: $priority, created: $created, updated: $updated)';
   }
 }

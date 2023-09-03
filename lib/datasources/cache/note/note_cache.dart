@@ -38,6 +38,23 @@ class NoteCache implements INoteCache {
   }
 
   @override
+  Future<List<NoteModel>> getNoteListToSync() async {
+    try {
+      final instance = await SharedPreferences.getInstance();
+      final json = instance.getString('notes');
+      final noteList = <NoteModel>[];
+      if (json != null) {
+        (jsonDecode(json) as List<dynamic>)
+            .map((element) => noteList.add(NoteModel.fromJson(element)))
+            .toList();
+      }
+      return noteList.where((element) => element.updatedAt == null).toList();
+    } catch (e) {
+      return <NoteModel>[];
+    }
+  }
+
+  @override
   Future<Either<Exception, void>> clearNoteList() async {
     try {
       final instance = await SharedPreferences.getInstance();
