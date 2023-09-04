@@ -17,7 +17,7 @@ class NoteCubit extends Cubit<NoteState> {
       emit(
         NoteSuccessState(
           note: NoteModel(
-            id: uuid.v1(),
+            id: '[TP]-${uuid.v1()}',
             createdAt: DateTime.now(),
           ),
         ),

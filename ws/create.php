@@ -14,7 +14,7 @@ if (!empty($data)) {
   $priorityError = null;
   $createdError = null;
 
-  $id = $data->id;
+  $id = str_replace('[TP]-', '', $data->id);
   $title = $data->title;
   $content = $data->content;
   $priority = $data->priority;

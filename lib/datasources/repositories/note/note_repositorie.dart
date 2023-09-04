@@ -1,7 +1,6 @@
 import 'dart:convert';
-import 'package:dio/dio.dart';
+import 'package:notes/datasources/cache/note/i_note_cache.dart';
 import 'package:notes/helpers/endpoints.dart';
-import 'package:notes/config/http_client/http_client.dart';
 import 'package:notes/config/http_client/i_http_client.dart';
 import 'package:notes/datasources/dtos/note/note.dart';
 import 'package:notes/config/either.dart';
@@ -9,14 +8,15 @@ import 'package:notes/datasources/repositories/note/i_note_repositorie.dart';
 import 'package:notes/models/note/note_model.dart';
 
 class NoteRepository implements INoteRepository {
-  final IHttpClient _httpClient = HttpClient(Dio());
+  final INoteCache cache;
+  final IHttpClient httpClient;
 
-  NoteRepository();
+  NoteRepository({required this.cache, required this.httpClient});
 
   @override
   Future<Either<Exception, void>> createNote(NoteModel note) async {
     try {
-      await _httpClient.post(
+      await httpClient.post(
         EndpointHelper.create,
         data: _toDto(note).toJson(),
       );
@@ -27,24 +27,25 @@ class NoteRepository implements INoteRepository {
   }
 
   @override
-  Future<Either<Exception, List<NoteModel>>> readNoteList() async {
+  Future<List<NoteModel>> readNoteList() async {
     try {
       List<NoteModel> noteList = [];
-      final response = await _httpClient.get(EndpointHelper.list);
+      final response = await httpClient.get(EndpointHelper.list);
       final data = json.decode(response.data) as List<dynamic>;
       data
           .map((element) => noteList.add(_toModel(NoteDto.fromMap(element))))
           .toList();
-      return Success(noteList);
+      await cache.saveNoteList(noteList);
+      return noteList;
     } catch (e) {
-      return Failure(Exception(e.toString()));
+      return await cache.getNoteList();
     }
   }
 
   @override
   Future<Either<Exception, void>> updateNote(NoteModel note) async {
     try {
-      await _httpClient.post(
+      await httpClient.post(
         EndpointHelper.update,
         data: _toDto(note).toJson(),
       );
@@ -57,13 +58,34 @@ class NoteRepository implements INoteRepository {
   @override
   Future<Either<Exception, void>> deleteNote(NoteModel note) async {
     try {
-      await _httpClient.post(
+      await httpClient.post(
         '${EndpointHelper.delete}?id=${note.id}',
       );
       return Success(null);
     } catch (e) {
       return Failure(Exception(e.toString()));
     }
+  }
+
+  @override
+  Future<Either<Exception, void>> sync() async {
+    try {
+      final noteList = await cache.getNoteListToSync();
+
+      noteList.map((note) async {
+        (note.id!.startsWith('[TP]-'))
+            ? await createNote(note)
+            : await updateNote(note);
+      }).toList();
+      return Success(null);
+    } catch (e) {
+      return Failure(Exception(e.toString()));
+    }
+  }
+
+  @override
+  Future<void> saveNoteList(List<NoteModel> noteList) async {
+    await cache.saveNoteList(noteList);
   }
 }
 
