@@ -17,14 +17,14 @@ class NoteDto {
     this.updated,
   });
 
-  factory NoteDto.fromMap(Map<String, dynamic> map) {
+  factory NoteDto.fromMap(Map<String, dynamic> json) {
     return NoteDto(
-      id: map['id'] ?? '',
-      title: map['title'] ?? '',
-      content: map['content'] ?? '',
-      priority: int.tryParse(map['priority']) ?? 0,
-      created: DateTime.parse(map['created']).toString(),
-      updated: DateTime.parse(map['updated']).toString(),
+      id: json['id'] as String? ?? '',
+      title: json['title'] as String? ?? '',
+      content: json['content'] as String? ?? '',
+      priority: (json['priority'] as num?)?.toInt() ?? 0,
+      created: DateTime.parse(json['created']).toString(),
+      updated: DateTime.parse(json['updated']).toString(),
     );
   }
 

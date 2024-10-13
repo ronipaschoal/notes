@@ -7,12 +7,14 @@ class NtNoteCard extends StatelessWidget {
   final NoteModel note;
   final GestureTapCallback? onTap;
   final GestureLongPressCallback? onLongPress;
+  final bool isCard;
 
   const NtNoteCard({
     super.key,
     required this.note,
     this.onTap,
     this.onLongPress,
+    this.isCard = true,
   });
 
   @override
@@ -21,10 +23,10 @@ class NtNoteCard extends StatelessWidget {
       onTap: onTap,
       onLongPress: onLongPress,
       child: Container(
-        height: 56.0,
+        height: 88.0,
         width: double.maxFinite,
         decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+          borderRadius: const BorderRadius.all(Radius.circular(8.0)),
           boxShadow: [
             BoxShadow(
               color: NtColors.midGray.withOpacity(0.5),
@@ -44,7 +46,6 @@ class NtNoteCard extends StatelessWidget {
               ),
             ),
             Container(
-              height: double.maxFinite,
               margin: const EdgeInsets.only(
                 left: 8.0,
                 top: 1.0,
@@ -53,24 +54,32 @@ class NtNoteCard extends StatelessWidget {
               ),
               decoration: const BoxDecoration(
                 color: NtColors.white,
-                borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                borderRadius: BorderRadius.all(Radius.circular(4.0)),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16.0, top: 6.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(note.title),
-                        Text(
-                          DateFormat('dd/MM/yy HH:mm')
-                              .format(note.createdAt ?? DateTime.now())
-                              .toString(),
-                          style: const TextStyle(fontSize: 12.0),
-                        ),
-                      ],
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            note.title,
+                            style: const TextStyle(fontSize: 16.0),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: isCard ? 3 : 1,
+                          ),
+                          Text(
+                            DateFormat('dd/MM/yy HH:mm')
+                                .format(note.createdAt ?? DateTime.now())
+                                .toString(),
+                            style: const TextStyle(fontSize: 14.0),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

@@ -81,13 +81,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: SizesHelper.getUsableHeightAppBar(context) -
                           _searchSize,
                       child: state.homeViewType == HomeViewType.list
-                          ? ListView.separated(
-                              padding: const EdgeInsets.all(8.0),
+                          ? ListView.builder(
                               shrinkWrap: true,
                               itemCount: state.noteList.length,
-                              separatorBuilder: (_, __) =>
-                                  const SizedBox(height: 8.0),
                               itemBuilder: (_, index) => NtNoteCard(
+                                isCard: false,
                                 note: state.noteList[index],
                                 onTap: () => NavigateHelper.to(
                                   context,
@@ -100,17 +98,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             )
                           : GridView.builder(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 16.0,
-                                horizontal: 8.0,
-                              ),
+                              padding: const EdgeInsets.all(8.0),
                               shrinkWrap: true,
                               itemCount: state.noteList.length,
                               gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
-                                crossAxisSpacing: 16.0,
-                                mainAxisSpacing: 16.0,
+                                crossAxisSpacing: 8.0,
+                                mainAxisSpacing: 8.0,
                                 childAspectRatio: 1.45,
                               ),
                               itemBuilder: (_, index) => NtNoteCard(

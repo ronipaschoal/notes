@@ -15,18 +15,25 @@ class AppConnectionCubit extends Cubit<AppConnectionState> {
     required this.repository,
   }) : super(ConnectionInitialState());
 
-  void _connectionState(bool isOnline) {
+  void _setConnectionState(bool isOnline) {
     isOnline ? emit(ConnectionOnlineState()) : emit(ConnectionOfflineState());
+  }
+
+  void _changeConnectionState(bool isOnline) {
+    if (_wasOffline && isOnline) _syncData();
+    _wasOffline = !isOnline;
+    _setConnectionState(isOnline);
   }
 
   void _syncData() => repository.sync();
 
   void init() {
-    connectionService.init().then((isOnline) => _connectionState(isOnline));
-    connectionService.stream().listen((isOnline) {
-      if (_wasOffline && isOnline) _syncData();
-      _wasOffline = !isOnline;
-      _connectionState(isOnline);
-    });
+    connectionService //
+        .init()
+        .then((isOnline) => _setConnectionState(isOnline));
+
+    connectionService //
+        .stream()
+        .listen((bool isOnline) => _changeConnectionState(isOnline));
   }
 }
