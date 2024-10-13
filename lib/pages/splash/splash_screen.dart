@@ -21,21 +21,17 @@ class _SplashScreenState extends State<SplashScreen> {
         .then((_) => NavigateHelper.go(context, NtPaths.home));
   }
 
-  Widget _body() {
-    return Container(
-      padding: const EdgeInsets.all(80.0),
-      color: NtColors.black,
-      child: const Image(
-        image: AssetImage('assets/icons/logo.png'),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Notes Splash',
-      home: _body(),
+      home: Container(
+        padding: const EdgeInsets.all(80.0),
+        color: NtColors.black,
+        child: const Image(
+          image: AssetImage('assets/icons/logo.png'),
+        ),
+      ),
     );
   }
 }

@@ -23,7 +23,8 @@ class NtTextfield extends StatelessWidget {
     this.prefixIcon,
   });
 
-  Widget _textField() {
+  @override
+  Widget build(BuildContext context) {
     return TextField(
       controller: controller,
       keyboardType: keyboardType,
@@ -52,10 +53,5 @@ class NtTextfield extends StatelessWidget {
       cursorColor: cursorColor ?? NtColors.darkGray,
       onChanged: onChanged,
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _textField();
   }
 }

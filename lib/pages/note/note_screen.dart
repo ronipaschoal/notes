@@ -36,68 +36,7 @@ class _NoteScreenState extends State<NoteScreen> {
     );
 
     await _cubit.save(noteToSave);
-    if (context.mounted) NavigateHelper.close(context);
-  }
-
-  Widget _floatingButton(NoteModel note) {
-    return FloatingActionButton(
-      onPressed: () => _save(note),
-      foregroundColor: NtColors.lightGray,
-      backgroundColor: NtColors.darkGray,
-      tooltip: 'Salvar',
-      child: const Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Icon(Icons.check),
-      ),
-    );
-  }
-
-  Widget _title(NoteModel note) {
-    return NtTextfield(
-      color: NtColors.white,
-      cursorColor: NtColors.lightGray,
-      hintText: note.title.isEmpty ? 'Adicione um titulo' : null,
-      controller: _titleController..text = note.title,
-    );
-  }
-
-  Widget _info(NoteModel note) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16.0, top: 8.0, right: 16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            DateFormat('dd/MM/yy HH:mm')
-                .format(note.createdAt ?? DateTime.now())
-                .toString(),
-          ),
-          Text(
-            note.priority?.text ?? '',
-            style: const TextStyle(color: NtColors.darkGray),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _content(NoteModel note) {
-    return NtTextfield(
-      hintText: note.content.isEmpty ? 'Adicione uma nota' : null,
-      controller: _contentController..text = note.content,
-      keyboardType: TextInputType.multiline,
-      borderColor: NtColors.white,
-    );
-  }
-
-  Widget _body(NoteModel note) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _info(note),
-        _content(note),
-      ],
-    );
+    if (mounted) NavigateHelper.close(context);
   }
 
   @override
@@ -107,10 +46,52 @@ class _NoteScreenState extends State<NoteScreen> {
         final note = state.note;
 
         return NtScaffold(
-          title: _title(note),
+          title: NtTextfield(
+            color: NtColors.white,
+            cursorColor: NtColors.lightGray,
+            hintText: note.title.isEmpty ? 'Adicione um titulo' : null,
+            controller: _titleController..text = note.title,
+          ),
           color: note.priority?.color ?? NtColors.primary,
-          floatingButton: _floatingButton(note),
-          child: _body(note),
+          floatingButton: FloatingActionButton(
+            onPressed: () => _save(note),
+            foregroundColor: NtColors.lightGray,
+            backgroundColor: NtColors.darkGray,
+            tooltip: 'Salvar',
+            child: const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Icon(Icons.check),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.only(left: 16.0, top: 8.0, right: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      DateFormat('dd/MM/yy HH:mm')
+                          .format(note.createdAt ?? DateTime.now())
+                          .toString(),
+                    ),
+                    Text(
+                      note.priority?.text ?? '',
+                      style: const TextStyle(color: NtColors.darkGray),
+                    ),
+                  ],
+                ),
+              ),
+              NtTextfield(
+                hintText: note.content.isEmpty ? 'Adicione uma nota' : null,
+                controller: _contentController..text = note.content,
+                keyboardType: TextInputType.multiline,
+                borderColor: NtColors.white,
+              ),
+            ],
+          ),
         );
       },
     );

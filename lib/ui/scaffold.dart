@@ -20,55 +20,39 @@ class NtScaffold extends StatelessWidget {
     this.actions,
   });
 
-  AppBar _appBar() {
-    return AppBar(
-      foregroundColor: NtColors.white,
-      backgroundColor: NtColors.darkGray,
-      shape: Border(
-        bottom: BorderSide(
-          color: color,
-          width: 4.0,
-        ),
-      ),
-      actions: actions,
-      title: title,
-    );
-  }
-
-  GestureDetector _unfocus(Widget child) {
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: child,
-    );
-  }
-
-  SizedBox _usefulArea(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height,
-      child: Column(
-        children: [
-          const ConnectionStatusBar(),
-          Expanded(child: child),
-        ],
-      ),
-    );
-  }
-
-  Widget _body(BuildContext context) {
-    return _unfocus(
-      Scaffold(
+      child: Scaffold(
         backgroundColor: NtColors.white,
-        appBar: title == null ? null : _appBar(),
+        appBar: title == null
+            ? null
+            : AppBar(
+                foregroundColor: NtColors.white,
+                backgroundColor: NtColors.darkGray,
+                shape: Border(
+                  bottom: BorderSide(
+                    color: color,
+                    width: 4.0,
+                  ),
+                ),
+                actions: actions,
+                title: title,
+              ),
         drawer: drawer,
         floatingActionButton: floatingButton,
-        body: _usefulArea(context),
+        body: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            children: [
+              const ConnectionStatusBar(),
+              Expanded(child: child),
+            ],
+          ),
+        ),
       ),
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _body(context);
   }
 }
